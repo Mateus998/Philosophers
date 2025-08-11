@@ -1,0 +1,22 @@
+usleep	Pausar tempo de comer/dormir; evitar loops pesados.
+
+gettimeofday	Medir tempos, detectar morte de filósofos.
+
+pthread_create	Criar threads para cada filósofo e, se necessário, para o monitor.
+
+pthread_detach	(Opcional) Para threads descartáveis sem join.
+
+pthread_join	Esperar threads terminarem antes de encerrar.
+
+pthread_mutex_init	Inicializar garfos e outros mutexes.
+
+pthread_mutex_destroy	Liberar recursos no final.
+
+pthread_mutex_lock	Pegar garfo ou entrar em seção crítica.
+
+pthread_mutex_unlock	Largar garfo ou sair de seção crítica.
+
+composicao do projeto
+alem das threads de cada filosofo deve haver uma para monitorar e ser responsavel pelo fechamento do programa
+no comeco todos os filosofos numero par comem
+depois o filosofo seguinte ao que comeu come e assim vai
