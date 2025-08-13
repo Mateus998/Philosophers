@@ -22,7 +22,7 @@
 
 typedef struct s_state
 {
-    int number_of_philosophers;
+    int number_of_philos;
     unsigned long time_to_die;
     unsigned long time_to_eat;
     unsigned long time_to_sleep;
@@ -32,15 +32,10 @@ typedef struct s_state
     pthread_mutex_t print_mutex;
 } t_state;
 
-t_state *init()
-{
-    static t_state init;
-    return (&init);
-}
-
 typedef struct s_philo
 {
     int id;
+    pthread_t thread;
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
     int meals;
