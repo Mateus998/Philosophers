@@ -6,16 +6,25 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:32:39 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/12 12:47:44 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/14 17:49:03 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-unsigned long	str_to_ml(const char *str)
+long time_ms(t_philo *philo)
+{
+	long time;
+	
+	gettimeofday(philo->tv, NULL);
+	time = philo->tv->tv_sec * 1000 + philo->tv->tv_usec / 1000;
+	return (time);
+}
+
+long	str_to_ml(const char *str)
 {
 	int	i;
-    unsigned long num;
+    long num;
 
     num = 0;
 	while (str[i])

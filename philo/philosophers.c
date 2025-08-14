@@ -6,27 +6,18 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:25:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/12 12:59:43 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/14 18:02:54 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void *rotine(void *arg)
-{
-    t_philo *philo = (t_philo *)arg;
-
-}
-
 void init_philo(t_philo *philo, int id, t_state *state)
 {
-    struct timeval tv;
-
-    gettimeofday(&tv, NULL); //protect
     philo->id = id;
     philo->state = state;
     philo->meals = 0;
-    philo->last_meal = (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+    philo->last_meal = time_ms(philo);
     philo->left_fork = &state->forks[id - 1];
     philo->right_fork = &state->forks[id % state->number_of_philos];
 }
@@ -43,6 +34,44 @@ void init_state(t_state *state, char **av, int ac)
         state->number_of_meals = -1;
     state->forks = malloc(sizeof(pthread_mutex_t) * state->number_of_philos);//protect
     state->status = 1;
+}
+
+void print_terminal(t_philo *philo, char *msg)
+{
+    pthread_mutex_lock(philo->state->print_mutex);
+    printf("%ld %i %s", time_ms(philo), philo->id, msg);
+    pthread_mutex_unlock(philo->state->print_mutex);
+}
+
+void *philo_rotine(void *arg)
+{
+    t_philo *philo;
+    t_state *state;
+    
+    philo = (t_philo *)arg;
+    state = philo->state;
+    if (philo->id % 2 != 0)
+        usleep((state->time_to_eat / 2) * 1000);
+    while (state->status == 1)
+    {
+        pthread_mutex_lock(philo->left_fork);
+        print_terminal(philo, "has taken left fork");
+        pthread_mutex_lock(philo->right_fork);
+        print_terminal(philo, "has taken right fork");
+        philo->last_meal = time_ms(philo);
+        print_terminal(philo, "is eating");
+        usleep(state->time_to_eat * 1000);
+        pthread_mutex_unlock(philo->left_fork);
+        pthread_mutex_unlock(philo->right_fork);
+        print_terminal(philo, "is sleeping");
+        usleep(state->time_to_sleep * 1000);
+        print_terminal(philo, "is thinking");
+    }
+}
+
+void *check_rotine(void *arg)
+{
+    //monitoramento dos filosofos durante suas acoes
 }
 
 int main(int ac, char **av) //protect thread and mutex functions
@@ -66,7 +95,8 @@ int main(int ac, char **av) //protect thread and mutex functions
     while (i < state.number_of_philos)
     {
         init_philo(&philos[i], i + 1, &state);
-        pthread_create(&philos[i].thread, NULL, &rotine, &philos[i]);
+        pthread_create(&philos[i].thread, NULL, &philo_rotine, &philos[i]);
         i++;
     }
+    pthread_create(&state.control, NULL, &check_rotine, &philos);
 }
