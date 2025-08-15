@@ -28,6 +28,7 @@ typedef struct s_state
     long time_to_sleep;
     int number_of_meals;
     int status;
+    struct timeval *tv;
     pthread_t control;
     pthread_mutex_t *forks;
     pthread_mutex_t *print_mutex;
@@ -47,6 +48,6 @@ typedef struct s_philo
 
 long	str_to_ml(const char *str);
 int	str_to_int(const char *str);
-long time_ms(t_philo *philo);
+long time_ms();
 
 #endif

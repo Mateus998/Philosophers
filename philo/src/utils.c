@@ -12,12 +12,13 @@
 
 #include "philosophers.h"
 
-long time_ms(t_philo *philo)
+long time_ms()
 {
+	struct timeval *tv;
 	long time;
 	
-	gettimeofday(philo->tv, NULL);
-	time = philo->tv->tv_sec * 1000 + philo->tv->tv_usec / 1000;
+	gettimeofday(tv, NULL);
+	time = tv->tv_sec * 1000 + tv->tv_usec / 1000;
 	return (time);
 }
 

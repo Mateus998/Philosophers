@@ -17,7 +17,7 @@ void init_philo(t_philo *philo, int id, t_state *state)
     philo->id = id;
     philo->state = state;
     philo->meals = 0;
-    philo->last_meal = time_ms(philo);
+    philo->last_meal = time_ms();
     philo->left_fork = &state->forks[id - 1];
     philo->right_fork = &state->forks[id % state->number_of_philos];
 }
@@ -39,7 +39,7 @@ void init_state(t_state *state, char **av, int ac)
 void print_terminal(t_philo *philo, char *msg)
 {
     pthread_mutex_lock(philo->state->print_mutex);
-    printf("%ld %i %s", time_ms(philo), philo->id, msg);
+    printf("%ld %i %s", time_ms(), philo->id, msg);
     pthread_mutex_unlock(philo->state->print_mutex);
 }
 
@@ -58,9 +58,10 @@ void *philo_rotine(void *arg)
         print_terminal(philo, "has taken left fork");
         pthread_mutex_lock(philo->right_fork);
         print_terminal(philo, "has taken right fork");
-        philo->last_meal = time_ms(philo);
+        philo->last_meal = time_ms();
         print_terminal(philo, "is eating");
         usleep(state->time_to_eat * 1000);
+        philo->meals++;
         pthread_mutex_unlock(philo->left_fork);
         pthread_mutex_unlock(philo->right_fork);
         print_terminal(philo, "is sleeping");
@@ -71,10 +72,36 @@ void *philo_rotine(void *arg)
 
 void *check_rotine(void *arg)
 {
-    //monitoramento dos filosofos durante suas acoes
+    t_philo *philos;
+    t_state *state;
+    int meals;
+    long time;
+    int i;
+
+    philos = (t_philo *)arg;
+    state = philos[0].state;
+    while(state->status == 1)
+    {
+        i = 0;
+        time = time_ms();
+        meals = 1;
+        while(i < state->number_of_philos && state->status == 1)
+        {
+            if (time - philos[i].last_meal > state->time_to_die)
+            {
+                print_terminal(&philos[i], "has died");
+                state->status = 0;
+            }
+            else if (philos[i].meals < state->number_of_meals)
+                meals = 0;
+            i++;
+        }
+        if (meals == 1)
+            state->status = 2;
+    }
 }
 
-int main(int ac, char **av) //protect thread and mutex functions
+int main(int ac, char **av) //protect functions and end program
 {
     int i;
     t_state state;
@@ -98,5 +125,5 @@ int main(int ac, char **av) //protect thread and mutex functions
         pthread_create(&philos[i].thread, NULL, &philo_rotine, &philos[i]);
         i++;
     }
-    pthread_create(&state.control, NULL, &check_rotine, &philos);
+    pthread_create(&state.control, NULL, &check_rotine, philos);
 }
