@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:25:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/14 18:02:54 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/18 18:32:04 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void *philo_rotine(void *arg)
         usleep(state->time_to_sleep * 1000);
         print_terminal(philo, "is thinking");
     }
+    return (NULL);
 }
 
 void *check_rotine(void *arg)
@@ -99,6 +100,7 @@ void *check_rotine(void *arg)
         if (meals == 1)
             state->status = 2;
     }
+    return (NULL);
 }
 
 int main(int ac, char **av) //protect functions and end program
@@ -116,7 +118,7 @@ int main(int ac, char **av) //protect functions and end program
         pthread_mutex_init(&state.forks[i], NULL);
         i++;
     }
-    pthread_mutex_init(&state.print_mutex, NULL);
+    pthread_mutex_init(state.print_mutex, NULL);
     philos = malloc(sizeof(t_philo) * state.number_of_philos);//protect
     i = 0;
     while (i < state.number_of_philos)
@@ -126,4 +128,21 @@ int main(int ac, char **av) //protect functions and end program
         i++;
     }
     pthread_create(&state.control, NULL, &check_rotine, philos);
+    i = 0;
+    while (i < state.number_of_philos)
+    {
+        pthread_join(philos[i].thread, NULL);
+        i++;
+    }
+    pthread_join(state.control, NULL);
+    i = 0;
+    while (i < state.number_of_philos)
+    {
+        pthread_mutex_destroy(&state.forks[i]);
+        i++;
+    }
+    pthread_mutex_destroy(state.print_mutex);
+    free(philos);
+    free(state.forks);
+    return (0);
 }

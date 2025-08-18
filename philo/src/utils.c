@@ -6,15 +6,15 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:32:39 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/14 17:49:03 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/18 18:38:01 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "../philosophers.h"
 
 long time_ms()
 {
-	struct timeval *tv;
+	struct timeval *tv = 0;
 	long time;
 	
 	gettimeofday(tv, NULL);
@@ -28,6 +28,7 @@ long	str_to_ml(const char *str)
     long num;
 
     num = 0;
+	i = 0;
 	while (str[i])
 	{
 		num = num * 10 + (str[i] - '0');
@@ -42,6 +43,7 @@ int	str_to_int(const char *str)
     int num;
 
     num = 0;
+	i = 0;
 	while (str[i])
 	{
 		num = num * 10 + (str[i] - '0');
