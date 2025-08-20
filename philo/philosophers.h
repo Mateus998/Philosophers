@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:35 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/18 15:35:28 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/20 16:44:32 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,26 +28,35 @@ typedef struct s_state
     long time_to_sleep;
     int number_of_meals;
     int status;
-    struct timeval *tv;
     pthread_t control;
-    pthread_mutex_t *forks;
+    pthread_mutex_t *status_mutex;
     pthread_mutex_t *print_mutex;
+    pthread_mutex_t *forks;
+    t_philo *philos;
 } t_state;
 
 typedef struct s_philo
 {
     int id;
-    struct timeval *tv;
+    int meals;
+    long last_meal;
     pthread_t thread;
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
-    int meals;
-    long last_meal;
-    t_state *state;
 } t_philo;
 
 long	str_to_ml(const char *str);
 int	str_to_int(const char *str);
 long time_ms();
+void print_terminal(int i, char *msg);
+void ft_clean();
+
+void *check_rotine(void *arg);
+void *philo_rotine(void *arg);
+
+void init_philos();
+t_philo *philo(int i);
+void init_state(char **av, int ac);
+t_state *state();
 
 #endif
