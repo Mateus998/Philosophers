@@ -39,7 +39,7 @@ void print_terminal(int i, char *msg)
 long time_ms()
 {
 	struct timeval tv;
-	long time = 0;
+	long time;
 	
 	if (gettimeofday(&tv, NULL) == -1)
 	{

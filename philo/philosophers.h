@@ -20,6 +20,16 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+typedef struct s_philo
+{
+    int id;
+    int meals;
+    long last_meal;
+    pthread_t thread;
+    pthread_mutex_t *left_fork;
+    pthread_mutex_t *right_fork;
+} t_philo;
+
 typedef struct s_state
 {
     int number_of_philos;
@@ -35,16 +45,6 @@ typedef struct s_state
     t_philo *philos;
 } t_state;
 
-typedef struct s_philo
-{
-    int id;
-    int meals;
-    long last_meal;
-    pthread_t thread;
-    pthread_mutex_t *left_fork;
-    pthread_mutex_t *right_fork;
-} t_philo;
-
 long	str_to_ml(const char *str);
 int	str_to_int(const char *str);
 long time_ms();
@@ -54,9 +54,9 @@ void ft_clean();
 void *check_rotine(void *arg);
 void *philo_rotine(void *arg);
 
-void init_philos();
+int init_philos();
 t_philo *philo(int i);
-void init_state(char **av, int ac);
+int init_state(char **av, int ac);
 t_state *state();
 
 #endif

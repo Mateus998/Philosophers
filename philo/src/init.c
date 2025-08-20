@@ -12,33 +12,6 @@
 
 #include "../philosophers.h"
 
-int init_philos()
-{
-    int i;
-    
-    state()->philos = malloc(sizeof(t_philo) * state()->number_of_philos);
-    if (!state()->philos)
-        return (0);
-    i = 0;
-    while (i < state()->number_of_philos)
-    {
-        state()->philos[i].id = i + 1;
-        state()->philos[i].meals = 0;
-        state()->philos[i].last_meal = time_ms();
-        state()->philos[i].left_fork = &state()->forks[i];
-        state()->philos[i].right_fork = &state()->forks[(i + 1) % state()->number_of_philos];
-        i++;
-    }
-    return (1);
-}
-
-t_philo *philo(int i)
-{
-    if (i < 0 || i >= state()->number_of_philos)
-        return (NULL);
-    return (&state()->philos[i]);
-}
-
 int init_state(char **av, int ac)
 {
     state()->number_of_philos = str_to_int(av[1]);
@@ -49,11 +22,11 @@ int init_state(char **av, int ac)
         state()->number_of_meals = str_to_int(av[5]);
     else
         state()->number_of_meals = -1;
-    state()->forks = malloc(sizeof(pthread_mutex_t) * state()->number_of_philos);//protect
+    state()->forks = malloc(sizeof(pthread_mutex_t) * state()->number_of_philos);
     if (!state()->forks)
-        return (0);
+        return (1);
     state()->status = 1;
-    return (1);
+    return (0);
 }
 
 t_state *state()
@@ -61,3 +34,32 @@ t_state *state()
     static t_state state;
     return (&state);
 }
+
+int init_philos()
+{
+    int i;
+    
+    state()->philos = malloc(sizeof(t_philo) * state()->number_of_philos);
+    if (!state()->philos)
+        return (1);
+    i = 0;
+    while (i < state()->number_of_philos)
+    {
+        state()->philos[i].id = i + 1;
+        state()->philos[i].meals = 0;
+        state()->philos[i].last_meal = time_ms();
+        state()->philos[i].left_fork = &state()->forks[i];
+        state()->philos[i].right_fork = &state()->forks[(i + 1) % state()->number_of_philos];
+        i++;
+    }
+    return (0);
+}
+
+t_philo *philo(int i)
+{
+    if (i < 0 || i >= state()->number_of_philos)
+        return (NULL);
+    return (&state()->philos[i]);
+}
+
+

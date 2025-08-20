@@ -15,11 +15,13 @@
 void *philo_rotine(void *arg)
 {
     t_philo *philo;
+    int loop;
     
+    loop = 1;
     philo = (t_philo *)arg;
     if (philo->id % 2 != 0)
         usleep((state()->time_to_eat / 2) * 1000);
-    while (1)
+    while (loop)
     {
         pthread_mutex_lock(philo->left_fork);
         print_terminal(philo->id, "has taken left fork");
@@ -34,41 +36,44 @@ void *philo_rotine(void *arg)
         print_terminal(philo->id, "is sleeping");
         usleep(state()->time_to_sleep * 1000);
         print_terminal(philo->id, "is thinking");
-        //mutex lock para var status
+        pthread_mutex_lock(state()->status_mutex);
+        loop = state()->status;
+        pthread_mutex_unlock(state()->status_mutex);
     }
     return (NULL);
 }
 
-void *check_rotine(void *arg) //correcoes
+void *check_rotine(void *arg)
 {
     t_philo *philos;
-    t_state *state;
     int meals;
-    long time;
     int i;
+    int loop;
 
     philos = (t_philo *)arg;
-    state = philos[0].state;
-    while(state->status == 1)
+    loop = 1;
+    while(loop)
     {
         i = 0;
-        time = time_ms();
         meals = 1;
-        while(i < state->number_of_philos && state->status == 1)
+        while(loop && i < state()->number_of_philos)
         {
-            if (time - philos[i].last_meal > state->time_to_die)
+            if (time_ms() - philos[i].last_meal >= state()->time_to_die)
             {
-                print_terminal(&philos[i], "has died");
-                state->status = 0;
+                print_terminal(philos[i].id, "has died");
+                loop = 0;
             }
-            else if (state->number_of_meals == -1)
+            else if (state()->number_of_meals == -1)
                 continue;
-            else if (philos[i].meals < state->number_of_meals)
+            else if (philos[i].meals < state()->number_of_meals)
                 meals = 0;
             i++;
         }
-        if (meals == 1 && state->number_of_meals != -1)
-            state->status = 2;
+        if (loop == 1 && meals == 1 && state()->number_of_meals != -1)
+            loop = 0;
     }
+    pthread_mutex_lock(state()->status_mutex);
+    state()->status = 0;
+    pthread_mutex_unlock(state()->status_mutex);
     return (NULL);
 }

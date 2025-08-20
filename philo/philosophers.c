@@ -29,16 +29,21 @@ static void thread_init()
     
     i = 0;
     while (i < state()->number_of_philos)
-        pthread_create(philo(i++)->thread, NULL, &philo_rotine, philo(i));
-    pthread_create(state()->control, NULL, &check_rotine, state()->philos);
+    {
+        pthread_create(&philo(i)->thread, NULL, &philo_rotine, philo(i));
+        i++;
+    }
+    pthread_create(&state()->control, NULL, &check_rotine, state()->philos);
 }
 
 int main(int ac, char **av) //protect pthread functions
 {
     if (ac < 5 || ac > 6)
-        return (0);
-    init_state(av, ac);
-    init_philos();
+        return (1);
+    if (init_state(av, ac))
+        return (1);
+    if (init_philos())
+        return (free(state()->forks), 1);
     mutex_init();
     thread_init();
     ft_clean();
