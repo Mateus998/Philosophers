@@ -6,56 +6,50 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:32:39 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/20 16:48:19 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/25 15:58:09 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philosophers.h"
 
-void ft_clean()
+void	ft_bzero(void *s, size_t n)
 {
-	int i;
-	
+	size_t			i;
+	unsigned char	*cs;
+
+	if (!s)
+		return ;
+	cs = (unsigned char *)s;
 	i = 0;
-    while (i < state()->number_of_philos)
-        pthread_join(philo(i++)->thread, NULL);
-    pthread_join(state()->control, NULL);
-    i = 0;
-    while (i < state()->number_of_philos)
-        pthread_mutex_destroy(&state()->forks[i++]);
-    pthread_mutex_destroy(state()->print_mutex);
-    pthread_mutex_destroy(state()->status_mutex);
-    free(state()->philos);
-    free(state()->forks);
-}
-
-void print_terminal(int i, char *msg)
-{
-    pthread_mutex_lock(state()->print_mutex);
-    printf("%ld %i %s\n", time_ms(), i, msg);
-    pthread_mutex_unlock(state()->print_mutex);
-}
-
-long time_ms()
-{
-	struct timeval tv;
-	long time;
-	
-	if (gettimeofday(&tv, NULL) == -1)
+	while (n--)
 	{
-		printf("get time ERRO\n");
-		exit(1);	
+		cs[i] = 0;
+		i++;
 	}
-	time = tv.tv_sec * 1000L + tv.tv_usec / 1000L;
-	return (time);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+
+	if (nmemb == 0 || size == 0)
+		ptr = malloc(0);
+	else if (nmemb <= ((size_t)-1) / size)
+		ptr = malloc(nmemb * size);
+	else
+		return (NULL);
+	if (ptr == NULL)
+		return (NULL);
+	ft_bzero(ptr, nmemb * size);
+	return (ptr);
 }
 
 long	str_to_ml(const char *str)
 {
-	int	i;
-    long num;
+	int		i;
+	long	num;
 
-    num = 0;
+	num = 0;
 	i = 0;
 	while (str[i])
 	{
@@ -68,9 +62,9 @@ long	str_to_ml(const char *str)
 int	str_to_int(const char *str)
 {
 	int	i;
-    int num;
+	int	num;
 
-    num = 0;
+	num = 0;
 	i = 0;
 	while (str[i])
 	{
