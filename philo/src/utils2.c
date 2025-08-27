@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 15:21:33 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/26 19:15:00 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/27 17:35:04 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	ft_clean(void)
 	i = 0;
 	while (i < state()->number_of_philos)
 		pthread_join(philo(i++)->thread, NULL);
-	pthread_join(state()->control, NULL);
+	// pthread_join(state()->control, NULL);
 	i = 0;
 	while (i < state()->number_of_philos)
 	{
-		pthread_mutex_destroy(&philo(i)->last_meal_mutex);
-		pthread_mutex_destroy(&philo(i)->meals_mutex);
+		// pthread_mutex_destroy(&philo(i)->last_meal_mutex);
+		// pthread_mutex_destroy(&philo(i)->meals_mutex);
 		pthread_mutex_destroy(&state()->forks[i++]);	
 	}
 	pthread_mutex_destroy(&state()->print_mutex);
@@ -36,7 +36,10 @@ void	ft_clean(void)
 void	print_terminal(int i, char *msg)
 {
 	pthread_mutex_lock(&state()->print_mutex);
-	printf("%ld %i %s\n", time_ms() - state()->begin_time, i, msg);
+	pthread_mutex_lock(&state()->status_mutex);
+	if (state()->status)
+		printf("%ld %i %s\n", time_ms() - state()->begin_time, i, msg);
+	pthread_mutex_unlock(&state()->status_mutex);
 	pthread_mutex_unlock(&state()->print_mutex);
 }
 
@@ -53,3 +56,4 @@ long	time_ms(void)
 	time = tv.tv_sec * 1000L + tv.tv_usec / 1000L;
 	return (time);
 }
+

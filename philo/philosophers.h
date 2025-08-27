@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:35 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/26 19:09:55 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/27 17:37:26 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ typedef struct s_philo
 	pthread_t		thread;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	last_meal_mutex;
-	pthread_mutex_t	meals_mutex;
+	// pthread_mutex_t	last_meal_mutex;
+	// pthread_mutex_t	meals_mutex;
 }					t_philo;
 
 typedef struct s_state
@@ -41,7 +41,7 @@ typedef struct s_state
 	int				number_of_meals;
 	long			begin_time;
 	int				status;
-	pthread_t		control;
+	// pthread_t		control;
 	pthread_mutex_t	status_mutex;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	*forks;
@@ -58,6 +58,8 @@ void				ft_clean(void);
 
 void				*check_rotine(void *arg);
 void				*philo_rotine(void *arg);
+int					loop_check(pthread_mutex_t *mutex1,
+						pthread_mutex_t *mutex2, t_philo *philo);
 
 int					init_philos(void);
 t_philo				*philo(int i);
