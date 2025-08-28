@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:25:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/27 17:41:22 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/28 14:09:02 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ static void	mutex_init(void)
 	i = 0;
 	while (i < state()->number_of_philos)
 	{
-		// pthread_mutex_init(&philo(i)->last_meal_mutex, NULL);
-		// pthread_mutex_init(&philo(i)->meals_mutex, NULL);
 		pthread_mutex_init(&state()->forks[i++], NULL);
 	}
 	pthread_mutex_init(&state()->print_mutex, NULL);
@@ -37,13 +35,12 @@ static void	thread_init(void)
 		pthread_create(&philo(i)->thread, NULL, &philo_rotine, philo(i));
 		i++;
 	}
-	// pthread_create(&state()->control, NULL, &check_rotine, state()->philos);
 }
 
 int	loop_check(pthread_mutex_t *mutex1, pthread_mutex_t *mutex2, t_philo *philo)
 {
-	long philo_life;
-	
+	long	philo_life;
+
 	pthread_mutex_lock(&state()->status_mutex);
 	philo_life = time_ms() - philo->last_meal;
 	if (state()->status == 1 && philo_life < state()->time_to_die)
@@ -54,7 +51,8 @@ int	loop_check(pthread_mutex_t *mutex1, pthread_mutex_t *mutex2, t_philo *philo)
 	if (philo_life >= state()->time_to_die)
 	{
 		pthread_mutex_lock(&state()->print_mutex);
-		printf("%ld %i %s\n", time_ms() - state()->begin_time, philo->id, "has died");
+		printf("%ld %i %s\n", time_ms() - state()->begin_time, philo->id,
+			"has died");
 		state()->status = 0;
 		pthread_mutex_unlock(&state()->print_mutex);
 	}
@@ -68,12 +66,15 @@ int	loop_check(pthread_mutex_t *mutex1, pthread_mutex_t *mutex2, t_philo *philo)
 
 int	main(int ac, char **av)
 {
+	int	i;
+
 	if (ac < 5 || ac > 6)
 		return (1);
-	if (init_state(av, ac))
-		return (1);
-	if (init_philos())
-		return (free(state()->forks), 1);
+	i = 1;
+	while (i < ac)
+		check_arg(av[i++]);
+	init_state(av, ac);
+	init_philos();
 	mutex_init();
 	thread_init();
 	ft_clean();
@@ -81,13 +82,9 @@ int	main(int ac, char **av)
 }
 /*
 notes
-singleton philo(id) nao funcionou dentro de loop_check....?
-protect the pthread functions? use exit and general close/clean
-delay on the creation of the thread comum a todos?
-odd number of philos is the same logic for even num, the initial delay works for both?
-create checker for args
-clean comments
+protect the pthread functions? achar forma de identificar 
+var mutex e/ou thread em uso
 
 problems
-erros on valgrind with flags
+como verificar morte durante usleep do filosofo
 */

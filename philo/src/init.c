@@ -6,28 +6,30 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 12:01:48 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/26 19:15:05 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/28 12:09:35 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philosophers.h"
 
-int	init_state(char **av, int ac)
+void	init_state(char **av, int ac)
 {
-	state()->number_of_philos = str_to_int(av[1]);
-	state()->time_to_die = str_to_ml(av[2]);
-	state()->time_to_eat = str_to_ml(av[3]);
-	state()->time_to_sleep = str_to_ml(av[4]);
+	state()->number_of_philos = ft_atoi(av[1]);
+	if (state()->number_of_philos == 0)
+		exit(21);
+	state()->time_to_die = ft_atol(av[2]);
+	state()->time_to_eat = ft_atol(av[3]);
+	state()->time_to_sleep = ft_atol(av[4]);
 	state()->begin_time = time_ms();
 	if (ac == 6)
-		state()->number_of_meals = str_to_int(av[5]);
+		state()->number_of_meals = ft_atoi(av[5]);
 	else
 		state()->number_of_meals = -1;
-	state()->forks = ft_calloc(state()->number_of_philos, sizeof(pthread_mutex_t));
+	state()->forks = ft_calloc(state()->number_of_philos,
+			sizeof(pthread_mutex_t));
 	if (!state()->forks)
-		return (1);
+		exit(22);
 	state()->status = 1;
-	return (0);
 }
 
 t_state	*state(void)
@@ -37,13 +39,13 @@ t_state	*state(void)
 	return (&state);
 }
 
-int	init_philos(void)
+void	init_philos(void)
 {
 	int	i;
 
 	state()->philos = ft_calloc(state()->number_of_philos, sizeof(t_philo));
 	if (!state()->philos)
-		return (1);
+		exit(31);
 	i = 0;
 	while (i < state()->number_of_philos)
 	{
@@ -55,7 +57,6 @@ int	init_philos(void)
 			% state()->number_of_philos];
 		i++;
 	}
-	return (0);
 }
 
 t_philo	*philo(int i)

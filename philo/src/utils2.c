@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 15:21:33 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/27 17:35:04 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/28 12:08:33 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,10 @@ void	ft_clean(void)
 	i = 0;
 	while (i < state()->number_of_philos)
 		pthread_join(philo(i++)->thread, NULL);
-	// pthread_join(state()->control, NULL);
 	i = 0;
 	while (i < state()->number_of_philos)
 	{
-		// pthread_mutex_destroy(&philo(i)->last_meal_mutex);
-		// pthread_mutex_destroy(&philo(i)->meals_mutex);
-		pthread_mutex_destroy(&state()->forks[i++]);	
+		pthread_mutex_destroy(&state()->forks[i++]);
 	}
 	pthread_mutex_destroy(&state()->print_mutex);
 	pthread_mutex_destroy(&state()->status_mutex);
@@ -57,3 +54,27 @@ long	time_ms(void)
 	return (time);
 }
 
+void	check_arg(char *a)
+{
+	int		j;
+	long	n;
+
+	j = 0;
+	if (!*a)
+		exit(11);
+	while (a[j] && ((a[j] >= 9 && a[j] <= 13) || a[j] == ' '))
+		j++;
+	if (a[j] == '\0')
+		exit(12);
+	if (a[j] == '+' || a[j] == '-')
+		j++;
+	while (a[j])
+	{
+		if (a[j] < '0' || a[j] > '9')
+			exit(13);
+		j++;
+	}
+	n = ft_atol(a);
+	if (n < 0 || n > INT_MAX)
+		exit(14);
+}

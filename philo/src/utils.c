@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:32:39 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/25 15:58:09 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/08/28 10:34:11 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,32 +44,44 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (ptr);
 }
 
-long	str_to_ml(const char *str)
+int	ft_atoi(const char *str)
 {
-	int		i;
-	long	num;
+	size_t	i;
+	int		s;
+	int		num;
 
-	num = 0;
+	if (!str)
+		return (0);
 	i = 0;
-	while (str[i])
-	{
-		num = num * 10 + (str[i] - '0');
+	s = 1;
+	num = 0;
+	while (str[i] && ((str[i] >= 9 && str[i] <= 13) || str[i] == ' '))
 		i++;
-	}
-	return (num);
+	if (str[i] == '+' || str[i] == '-')
+		if (str[i++] == '-')
+			s = -1;
+	while (str[i] && str[i] >= '0' && str[i] <= '9')
+		num = num * 10 + (str[i++] - '0');
+	return (num * s);
 }
 
-int	str_to_int(const char *str)
+long	ft_atol(const char *str)
 {
-	int	i;
-	int	num;
+	size_t	i;
+	int		s;
+	long		num;
 
-	num = 0;
+	if (!str)
+		return (0);
 	i = 0;
-	while (str[i])
-	{
-		num = num * 10 + (str[i] - '0');
+	s = 1;
+	num = 0;
+	while (str[i] && ((str[i] >= 9 && str[i] <= 13) || str[i] == ' '))
 		i++;
-	}
-	return (num);
+	if (str[i] == '+' || str[i] == '-')
+		if (str[i++] == '-')
+			s = -1;
+	while (str[i] && str[i] >= '0' && str[i] <= '9')
+		num = num * 10 + (str[i++] - '0');
+	return (num * s);
 }
