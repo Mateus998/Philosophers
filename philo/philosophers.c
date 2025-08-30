@@ -41,26 +41,26 @@ int	loop_check(pthread_mutex_t *mutex1, pthread_mutex_t *mutex2, t_philo *philo)
 {
 	long	philo_life;
 
-	pthread_mutex_lock(&state()->status_mutex);
 	philo_life = time_ms() - philo->last_meal;
+	pthread_mutex_lock(&state()->status_mutex);
 	if (state()->status == 1 && philo_life < state()->time_to_die)
 	{
 		pthread_mutex_unlock(&state()->status_mutex);
 		return (1);
 	}
+	pthread_mutex_lock(&state()->print_mutex);
 	if (philo_life >= state()->time_to_die)
 	{
-		pthread_mutex_lock(&state()->print_mutex);
 		printf("%ld %i %s\n", time_ms() - state()->begin_time, philo->id,
 			"has died");
 		state()->status = 0;
-		pthread_mutex_unlock(&state()->print_mutex);
 	}
+	pthread_mutex_unlock(&state()->status_mutex);
+	pthread_mutex_unlock(&state()->print_mutex);
 	if (mutex1)
 		pthread_mutex_unlock(mutex1);
 	if (mutex2)
 		pthread_mutex_unlock(mutex2);
-	pthread_mutex_unlock(&state()->status_mutex);
 	return (0);
 }
 
@@ -86,5 +86,5 @@ protect the pthread functions? achar forma de identificar
 var mutex e/ou thread em uso
 
 problems
-como verificar morte durante usleep do filosofo
+cortar terminal logo na primeira morte
 */

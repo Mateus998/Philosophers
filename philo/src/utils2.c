@@ -32,12 +32,12 @@ void	ft_clean(void)
 
 void	print_terminal(int i, char *msg)
 {
-	pthread_mutex_lock(&state()->print_mutex);
 	pthread_mutex_lock(&state()->status_mutex);
-	if (state()->status)
+	pthread_mutex_lock(&state()->print_mutex);
+	if (state()->status == 1)
 		printf("%ld %i %s\n", time_ms() - state()->begin_time, i, msg);
-	pthread_mutex_unlock(&state()->status_mutex);
 	pthread_mutex_unlock(&state()->print_mutex);
+	pthread_mutex_unlock(&state()->status_mutex);
 }
 
 long	time_ms(void)

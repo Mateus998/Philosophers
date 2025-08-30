@@ -46,18 +46,32 @@ int	ft_take_forks_reverse(t_philo *philo)
 	return (1);
 }
 
+void smart_usleep(t_philo *philo, long time)
+{
+	long start;
+
+	start = time_ms();
+	while(time_ms() - start < time)
+	{
+		if (time_ms() - philo->last_meal >= state()->time_to_die)
+		{
+			break;
+		}
+		usleep(1000);
+	}
+}
+
 int	ft_eat(t_philo *philo)
 {
 	if (!loop_check(philo->left_fork, philo->right_fork, philo))
 		return (0);
 	print_terminal(philo->id, "is eating");
+	// usleep(1000 * state()->time_to_eat);
+	smart_usleep(philo, state()->time_to_eat);
 	if (!loop_check(philo->left_fork, philo->right_fork, philo))
 		return (0);
-	usleep(state()->time_to_eat * 1000);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
-	if (!loop_check(NULL, NULL, philo))
-		return (0);
 	philo->last_meal = time_ms();
 	if (state()->number_of_meals == -1)
 		return (1);
@@ -74,10 +88,9 @@ void	rotine_loop(t_philo *philo, int (*func)(t_philo *))
 			break ;
 		if (!ft_eat(philo))
 			break ;
-		if (!loop_check(NULL, NULL, philo))
-			break ;
 		print_terminal(philo->id, "is sleeping");
-		usleep(state()->time_to_sleep * 1000);
+		// usleep(1000 * state()->time_to_sleep);
+		smart_usleep(philo, state()->time_to_sleep);
 		if (!loop_check(NULL, NULL, philo))
 			break ;
 		print_terminal(philo->id, "is thinking");

@@ -63,6 +63,6 @@ int					loop_check(pthread_mutex_t *mutex1, pthread_mutex_t *mutex2,
 void					init_philos(void);
 t_philo				*philo(int i);
 void					init_state(char **av, int ac);
-t_state				*state(void);
+t_state	*state(void);
 
 #endif

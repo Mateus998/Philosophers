@@ -17,9 +17,9 @@ void	init_state(char **av, int ac)
 	state()->number_of_philos = ft_atoi(av[1]);
 	if (state()->number_of_philos == 0)
 		exit(21);
-	state()->time_to_die = ft_atol(av[2]);
-	state()->time_to_eat = ft_atol(av[3]);
-	state()->time_to_sleep = ft_atol(av[4]);
+	state()->time_to_die = ft_atoi(av[2]);
+	state()->time_to_eat = ft_atoi(av[3]);
+	state()->time_to_sleep = ft_atoi(av[4]);
 	state()->begin_time = time_ms();
 	if (ac == 6)
 		state()->number_of_meals = ft_atoi(av[5]);
@@ -35,7 +35,6 @@ void	init_state(char **av, int ac)
 t_state	*state(void)
 {
 	static t_state	state;
-
 	return (&state);
 }
 
