@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 12:01:48 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/28 12:09:35 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:03:21 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	init_state(char **av, int ac)
 	else
 		state()->number_of_meals = -1;
 	state()->forks = ft_calloc(state()->number_of_philos,
-			sizeof(pthread_mutex_t));
+		sizeof(pthread_mutex_t));
 	if (!state()->forks)
 		exit(22);
 	state()->status = 1;
@@ -35,6 +35,7 @@ void	init_state(char **av, int ac)
 t_state	*state(void)
 {
 	static t_state	state;
+
 	return (&state);
 }
 
@@ -53,7 +54,7 @@ void	init_philos(void)
 		state()->philos[i].last_meal = time_ms();
 		state()->philos[i].left_fork = &state()->forks[i];
 		state()->philos[i].right_fork = &state()->forks[(i + 1)
-			% state()->number_of_philos];
+		% state()->number_of_philos];
 		i++;
 	}
 }

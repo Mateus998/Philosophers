@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 15:21:33 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/28 12:08:33 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/01 14:47:57 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,12 @@ void	ft_clean(void)
 	i = 0;
 	while (i < state()->number_of_philos)
 		pthread_join(philo(i++)->thread, NULL);
+	pthread_join(state()->monitor, NULL);
 	i = 0;
 	while (i < state()->number_of_philos)
 	{
+		pthread_mutex_destroy(&state()->philos[i].last_meal_mutex);
+		pthread_mutex_destroy(&state()->philos[i].meals_mutex);
 		pthread_mutex_destroy(&state()->forks[i++]);
 	}
 	pthread_mutex_destroy(&state()->print_mutex);

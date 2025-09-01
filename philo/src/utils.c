@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:32:39 by mateferr          #+#    #+#             */
-/*   Updated: 2025/08/28 10:34:11 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:01:28 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ long	ft_atol(const char *str)
 {
 	size_t	i;
 	int		s;
-	long		num;
+	long	num;
 
 	if (!str)
 		return (0);
