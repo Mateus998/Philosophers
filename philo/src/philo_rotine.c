@@ -6,28 +6,54 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 11:59:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/01 18:01:17 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/02 12:49:58 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philosophers.h"
 
-void	ft_take_forks(t_philo *philo)
+int error_stop(pthread_mutex_t *mtx, int status)
+{
+	if (mtx)
+		pthread_mutex_unlock(mtx);
+	if (status == 0)
+	{
+		if (pthread_mutex_lock(&state()->status_mutex) != 0)
+		{
+			state()->status = 0;
+			return (1);
+		}
+		state()->status = 0;
+	}
+	pthread_mutex_unlock(&state()->status_mutex);
+	return (1);
+}
+
+int	ft_take_forks(t_philo *philo)
 {
 	if (philo->id % 2 != 0)
 	{
-		pthread_mutex_lock(philo->right_fork);
-		print_terminal(philo->id, "has taken right fork");
-		pthread_mutex_lock(philo->left_fork);
-		print_terminal(philo->id, "has taken left fork");
+		if (pthread_mutex_lock(philo->right_fork) != 0)
+			return (error_stop(NULL, 0));
+		if (print_terminal(philo->id, "has taken right fork"))
+			return (1);
+		if (pthread_mutex_lock(philo->left_fork) != 0)
+			return (error_stop(philo->right_fork, 0));
+		if (print_terminal(philo->id, "has taken left fork"))
+			return (1);
 	}
 	else
 	{
-		pthread_mutex_lock(philo->left_fork);
-		print_terminal(philo->id, "has taken left fork");
-		pthread_mutex_lock(philo->right_fork);
-		print_terminal(philo->id, "has taken right fork");
+		if (pthread_mutex_lock(philo->left_fork) != 0)
+			return (error_stop(NULL, 0));
+		if (print_terminal(philo->id, "has taken left fork"))
+			return (1);
+		if (pthread_mutex_lock(philo->right_fork) != 0)
+			return (error_stop(philo->left_fork, 0));
+		if (print_terminal(philo->id, "has taken right fork"))
+			return (1);
 	}
+	return (0);
 }
 
 void	partial_usleep(long time)
@@ -41,23 +67,26 @@ void	partial_usleep(long time)
 
 int	ft_eat(t_philo *philo)
 {
-	print_terminal(philo->id, "is eating");
+	if (print_terminal(philo->id, "is eating"))
+			return (1);
 	partial_usleep(state()->time_to_eat);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
-	pthread_mutex_lock(&philo->last_meal_mutex);
+	if (pthread_mutex_lock(&philo->last_meal_mutex) != 0)
+		return (error_stop(NULL, 0));
 	philo->last_meal = time_ms();
 	pthread_mutex_unlock(&philo->last_meal_mutex);
 	if (state()->number_of_meals == -1)
 		return (1);
-	pthread_mutex_lock(&philo->meals_mutex);
+	if (pthread_mutex_lock(&philo->meals_mutex) != 0)
+		return (error_stop(NULL, 0));
 	if (++philo->meals >= state()->number_of_meals)
 	{
 		pthread_mutex_unlock(&philo->meals_mutex);
-		return (0);
+		return (1);
 	}
 	pthread_mutex_unlock(&philo->meals_mutex);
-	return (1);
+	return (0);
 }
 
 void	*philo_rotine(void *arg)
@@ -71,16 +100,21 @@ void	*philo_rotine(void *arg)
 		usleep(1000);
 	while (1)
 	{
-		ft_take_forks(philo);
-		if (!ft_eat(philo))
+		if (ft_take_forks(philo))
 			break ;
-		print_terminal(philo->id, "is sleeping");
+		if (ft_eat(philo))
+			break ;
+		if (print_terminal(philo->id, "is sleeping"))
+			break ;
 		partial_usleep(state()->time_to_sleep);
-		print_terminal(philo->id, "is thinking");
-		pthread_mutex_lock(&state()->status_mutex);
+		if (print_terminal(philo->id, "is thinking"))
+			break ;
+		if (pthread_mutex_lock(&state()->status_mutex) != 0)
+			state()->status = 2;
 		if (state()->status != 1)
 		{
-			pthread_mutex_unlock(&state()->status_mutex);
+			if (state()->status == 0)
+				pthread_mutex_unlock(&state()->status_mutex);
 			break ;
 		}
 		pthread_mutex_unlock(&state()->status_mutex);

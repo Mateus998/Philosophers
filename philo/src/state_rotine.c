@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 17:20:24 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/01 18:01:13 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/02 12:41:38 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,17 @@
 
 int	philo_death(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->last_meal_mutex);
+	if (pthread_mutex_lock(&philo->last_meal_mutex) != 0)
+		return (error_stop(NULL, 0));
 	if (time_ms() - philo->last_meal >= state()->time_to_die)
 	{
-		pthread_mutex_lock(&state()->status_mutex);
-		pthread_mutex_lock(&state()->print_mutex);
-		printf("%ld %i %s\n", time_ms() - state()->begin_time, philo->id,
-			"has died");
+		if (pthread_mutex_lock(&state()->status_mutex) != 0)
+			return (error_stop(&philo->last_meal_mutex, 0));
+		if (pthread_mutex_lock(&state()->print_mutex) != 0)
+			return (error_stop(&philo->last_meal_mutex, 1));
+		if (state()->status == 1)
+			printf("%ld %i %s\n", time_ms() - state()->begin_time, philo->id,
+				"has died");
 		state()->status = 0;
 		pthread_mutex_unlock(&state()->print_mutex);
 		pthread_mutex_unlock(&state()->status_mutex);
@@ -45,7 +49,8 @@ int	meals_check(t_philo *philo, int *meals)
 {
 	if (state()->number_of_meals != -1)
 	{
-		pthread_mutex_lock(&philo->meals_mutex);
+		if (pthread_mutex_lock(&philo->meals_mutex) != 0)
+			return (error_stop(NULL, 0));
 		if (philo->meals >= state()->number_of_meals)
 			*meals = *meals + 1;
 		pthread_mutex_unlock(&philo->meals_mutex);

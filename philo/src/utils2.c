@@ -6,13 +6,13 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 15:21:33 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/01 14:47:57 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/02 12:45:56 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philosophers.h"
 
-void	ft_clean(void)
+void	ft_clean(int error_code)
 {
 	int	i;
 
@@ -31,16 +31,20 @@ void	ft_clean(void)
 	pthread_mutex_destroy(&state()->status_mutex);
 	free(state()->philos);
 	free(state()->forks);
+	exit(error_code);
 }
 
-void	print_terminal(int i, char *msg)
+int	print_terminal(int i, char *msg)
 {
-	pthread_mutex_lock(&state()->status_mutex);
-	pthread_mutex_lock(&state()->print_mutex);
+	if (pthread_mutex_lock(&state()->status_mutex) != 0)
+		return (error_stop(NULL, 0));
+	if (pthread_mutex_lock(&state()->print_mutex) != 0)
+		return (error_stop(NULL, 1));
 	if (state()->status == 1)
 		printf("%ld %i %s\n", time_ms() - state()->begin_time, i, msg);
 	pthread_mutex_unlock(&state()->print_mutex);
 	pthread_mutex_unlock(&state()->status_mutex);
+	return (0);
 }
 
 long	time_ms(void)

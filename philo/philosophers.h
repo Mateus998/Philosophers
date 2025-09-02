@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:35 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/01 17:52:17 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/02 12:45:11 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,14 @@ int					ft_atoi(const char *str);
 long				ft_atol(const char *str);
 
 long				time_ms(void);
-void				print_terminal(int i, char *msg);
-void				ft_clean(void);
+int				print_terminal(int i, char *msg);
+void				ft_clean(int error_code);
 void				check_arg(char *a);
 
 void				*philo_rotine(void *arg);
 void				*state_rotine(void *arg);
 int					philo_death(t_philo *philo);
+int error_stop(pthread_mutex_t *mtx, int status);
 
 void				init_philos(void);
 t_philo				*philo(int i);
