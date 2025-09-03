@@ -14,24 +14,20 @@
 
 int	philo_death(t_philo *philo)
 {
-	if (pthread_mutex_lock(&philo->last_meal_mutex) != 0)
-		return (error_stop(NULL, 0));
+	mutex_lock(&philo->last_meal_mutex);
 	if (time_ms() - philo->last_meal >= state()->time_to_die)
 	{
-		if (pthread_mutex_lock(&state()->status_mutex) != 0)
-			return (error_stop(&philo->last_meal_mutex, 0));
-		if (pthread_mutex_lock(&state()->print_mutex) != 0)
-			return (error_stop(&philo->last_meal_mutex, 1));
-		if (state()->status == 1)
-			printf("%ld %i %s\n", time_ms() - state()->begin_time, philo->id,
-				"has died");
+		mutex_lock(&state()->status_mutex);
+		mutex_lock(&state()->print_mutex);
+		printf("%ld %i %s\n", time_ms() - state()->begin_time, philo->id,
+			"has died");
 		state()->status = 0;
-		pthread_mutex_unlock(&state()->print_mutex);
-		pthread_mutex_unlock(&state()->status_mutex);
-		pthread_mutex_unlock(&philo->last_meal_mutex);
+		mutex_unlock(&state()->print_mutex);
+		mutex_unlock(&state()->status_mutex);
+		mutex_unlock(&philo->last_meal_mutex);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo->last_meal_mutex);
+	mutex_unlock(&philo->last_meal_mutex);
 	return (0);
 }
 
@@ -49,18 +45,17 @@ int	meals_check(t_philo *philo, int *meals)
 {
 	if (state()->number_of_meals != -1)
 	{
-		if (pthread_mutex_lock(&philo->meals_mutex) != 0)
-			return (error_stop(NULL, 0));
+		mutex_lock(&philo->meals_mutex);
 		if (philo->meals >= state()->number_of_meals)
 			*meals = *meals + 1;
-		pthread_mutex_unlock(&philo->meals_mutex);
+		mutex_unlock(&philo->meals_mutex);
 		if (*meals >= state()->number_of_philos)
 			return (1);
 	}
 	return (0);
 }
 
-void	*state_rotine(void *arg)
+void	*state_routine(void *arg)
 {
 	t_philo	*philos;
 	int		i;
@@ -69,8 +64,10 @@ void	*state_rotine(void *arg)
 	i = 0;
 	philos = (t_philo *)arg;
 	meals = 0;
-	if (state()->number_of_philos == 1)
+	if (state()->number_of_philos == 1 || state()->number_of_meals == 0)
 		return (NULL);
+	mutex_lock(&state()->status_mutex);
+	mutex_unlock(&state()->status_mutex);
 	while (1)
 	{
 		reset_loop(&i, &meals);

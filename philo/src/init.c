@@ -12,24 +12,24 @@
 
 #include "../philosophers.h"
 
-void	init_state(char **av, int ac)
+int	init_state(char **av, int ac)
 {
 	state()->number_of_philos = ft_atoi(av[1]);
 	if (state()->number_of_philos == 0)
-		exit(21);
+		return (1);
 	state()->time_to_die = ft_atoi(av[2]);
 	state()->time_to_eat = ft_atoi(av[3]);
 	state()->time_to_sleep = ft_atoi(av[4]);
-	state()->begin_time = time_ms();
 	if (ac == 6)
 		state()->number_of_meals = ft_atoi(av[5]);
 	else
 		state()->number_of_meals = -1;
+	state()->status = 2;
 	state()->forks = ft_calloc(state()->number_of_philos,
-		sizeof(pthread_mutex_t));
+		sizeof(t_mutex));
 	if (!state()->forks)
-		exit(22);
-	state()->status = 1;
+		return(1);
+	return (0);
 }
 
 t_state	*state(void)
@@ -39,13 +39,13 @@ t_state	*state(void)
 	return (&state);
 }
 
-void	init_philos(void)
+int	init_philos(void)
 {
 	int	i;
 
 	state()->philos = ft_calloc(state()->number_of_philos, sizeof(t_philo));
 	if (!state()->philos)
-		exit(31);
+		return (free(state()->forks) ,1);
 	i = 0;
 	while (i < state()->number_of_philos)
 	{
@@ -57,6 +57,7 @@ void	init_philos(void)
 		% state()->number_of_philos];
 		i++;
 	}
+	return (0);
 }
 
 t_philo	*philo(int i)

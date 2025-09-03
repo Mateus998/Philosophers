@@ -11,7 +11,8 @@
 # **************************************************************************** #
 
 NAME = philo
-SRC = src/utils.c src/utils2.c src/philo_rotine.c src/init.c src/state_rotine.c
+SRC = src/utils.c src/utils2.c src/philo_routine.c src/init.c \
+src/state_routine.c src/mutex.c src/thread.c
 OBJ = $(SRC:.c=.o)
 CC = cc
 CFLAGS = -Wall -Wextra -Werror

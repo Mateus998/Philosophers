@@ -21,16 +21,28 @@
 # include <sys/time.h>
 # include <unistd.h>
 
+typedef struct s_thread
+{
+	pthread_t thread;
+	int created;
+} t_thread;
+
+typedef struct s_mutex
+{
+	pthread_mutex_t mutex;
+	int initiated;
+} t_mutex;
+
 typedef struct s_philo
 {
 	int				id;
 	int				meals;
 	long			last_meal;
-	pthread_t		thread;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	last_meal_mutex;
-	pthread_mutex_t	meals_mutex;
+	t_thread		thread;
+	t_mutex	*left_fork;
+	t_mutex	*right_fork;
+	t_mutex	last_meal_mutex;
+	t_mutex	meals_mutex;
 }					t_philo;
 
 typedef struct s_state
@@ -42,10 +54,10 @@ typedef struct s_state
 	int				number_of_meals;
 	long			begin_time;
 	int				status;
-	pthread_t		monitor;
-	pthread_mutex_t	status_mutex;
-	pthread_mutex_t	print_mutex;
-	pthread_mutex_t	*forks;
+	t_thread		monitor;
+	t_mutex	status_mutex;
+	t_mutex	print_mutex;
+	t_mutex	*forks;
 	t_philo			*philos;
 }					t_state;
 
@@ -55,18 +67,25 @@ int					ft_atoi(const char *str);
 long				ft_atol(const char *str);
 
 long				time_ms(void);
-int				print_terminal(int i, char *msg);
-void				ft_clean(int error_code);
-void				check_arg(char *a);
+void				print_terminal(int i, char *msg);
+void				ft_clean(void);
+int				check_arg(char *a);
 
-void				*philo_rotine(void *arg);
-void				*state_rotine(void *arg);
+void				*philo_routine(void *arg);
+void				*state_routine(void *arg);
 int					philo_death(t_philo *philo);
-int error_stop(pthread_mutex_t *mtx, int status);
 
-void				init_philos(void);
+int				init_philos(void);
+int				init_state(char **av, int ac);
 t_philo				*philo(int i);
-void				init_state(char **av, int ac);
 t_state				*state(void);
+
+int	create_all_threads(void);
+void safe_join(t_thread *th);
+
+int	init_all_mutex(void);
+void safe_mutex_destroy(t_mutex *mtx);
+void mutex_unlock(t_mutex *mtx);
+void mutex_lock(t_mutex *mtx);
 
 #endif

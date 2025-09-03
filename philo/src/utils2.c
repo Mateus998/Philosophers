@@ -12,39 +12,35 @@
 
 #include "../philosophers.h"
 
-void	ft_clean(int error_code)
+void	ft_clean(void)
 {
 	int	i;
 
 	i = 0;
 	while (i < state()->number_of_philos)
-		pthread_join(philo(i++)->thread, NULL);
-	pthread_join(state()->monitor, NULL);
+		safe_join(&philo(i++)->thread);
+	safe_join(&state()->monitor);
 	i = 0;
 	while (i < state()->number_of_philos)
 	{
-		pthread_mutex_destroy(&state()->philos[i].last_meal_mutex);
-		pthread_mutex_destroy(&state()->philos[i].meals_mutex);
-		pthread_mutex_destroy(&state()->forks[i++]);
+		safe_mutex_destroy(&philo(i)->last_meal_mutex);
+		safe_mutex_destroy(&philo(i)->meals_mutex);
+		safe_mutex_destroy(&state()->forks[i++]);
 	}
-	pthread_mutex_destroy(&state()->print_mutex);
-	pthread_mutex_destroy(&state()->status_mutex);
+	safe_mutex_destroy(&state()->print_mutex);
+	safe_mutex_destroy(&state()->status_mutex);
 	free(state()->philos);
 	free(state()->forks);
-	exit(error_code);
 }
 
-int	print_terminal(int i, char *msg)
+void	print_terminal(int i, char *msg)
 {
-	if (pthread_mutex_lock(&state()->status_mutex) != 0)
-		return (error_stop(NULL, 0));
-	if (pthread_mutex_lock(&state()->print_mutex) != 0)
-		return (error_stop(NULL, 1));
+	mutex_lock(&state()->status_mutex);
+	mutex_lock(&state()->print_mutex);
 	if (state()->status == 1)
 		printf("%ld %i %s\n", time_ms() - state()->begin_time, i, msg);
-	pthread_mutex_unlock(&state()->print_mutex);
-	pthread_mutex_unlock(&state()->status_mutex);
-	return (0);
+	mutex_unlock(&state()->print_mutex);
+	mutex_unlock(&state()->status_mutex);
 }
 
 long	time_ms(void)
@@ -52,36 +48,33 @@ long	time_ms(void)
 	struct timeval	tv;
 	long			time;
 
-	if (gettimeofday(&tv, NULL) == -1)
-	{
-		printf("get time ERRO\n");
-		exit(1);
-	}
+	gettimeofday(&tv, NULL);
 	time = tv.tv_sec * 1000L + tv.tv_usec / 1000L;
 	return (time);
 }
 
-void	check_arg(char *a)
+int	check_arg(char *a)
 {
 	int		j;
 	long	n;
 
 	j = 0;
 	if (!*a)
-		exit(11);
+		return (1);
 	while (a[j] && ((a[j] >= 9 && a[j] <= 13) || a[j] == ' '))
 		j++;
 	if (a[j] == '\0')
-		exit(12);
+		return (1);
 	if (a[j] == '+' || a[j] == '-')
 		j++;
 	while (a[j])
 	{
 		if (a[j] < '0' || a[j] > '9')
-			exit(13);
+			return (1);
 		j++;
 	}
 	n = ft_atol(a);
 	if (n < 0 || n > INT_MAX)
-		exit(14);
+		return (1);
+	return (0);
 }
