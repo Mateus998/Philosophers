@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-int	main(int ac, char **av)
+int	main(int ac, char **av) // test 5 800 200 200
 {
 	int	i;
 

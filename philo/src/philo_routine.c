@@ -49,7 +49,7 @@ int	ft_eat(t_philo *philo)
 	philo->last_meal = time_ms();
 	mutex_unlock(&philo->last_meal_mutex);
 	if (state()->number_of_meals == -1)
-		return (1);
+		return (0);
 	mutex_lock(&philo->meals_mutex);
 	if (++philo->meals >= state()->number_of_meals)
 	{
