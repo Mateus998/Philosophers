@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 12:01:48 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/01 18:03:21 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/03 12:02:17 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,9 @@ int	init_state(char **av, int ac)
 	else
 		state()->number_of_meals = -1;
 	state()->status = 2;
-	state()->forks = ft_calloc(state()->number_of_philos,
-		sizeof(t_mutex));
+	state()->forks = ft_calloc(state()->number_of_philos, sizeof(t_mutex));
 	if (!state()->forks)
-		return(1);
+		return (1);
 	return (0);
 }
 
@@ -45,7 +44,7 @@ int	init_philos(void)
 
 	state()->philos = ft_calloc(state()->number_of_philos, sizeof(t_philo));
 	if (!state()->philos)
-		return (free(state()->forks) ,1);
+		return (free(state()->forks), 1);
 	i = 0;
 	while (i < state()->number_of_philos)
 	{

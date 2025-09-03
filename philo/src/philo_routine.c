@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_rotine.c                                     :+:      :+:    :+:   */
+/*   philo_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 11:59:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/02 12:49:58 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/03 12:07:16 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	ft_eat(t_philo *philo)
 	return (0);
 }
 
-int begin_routine(t_philo	*philo)
+int	begin_routine(t_philo *philo)
 {
 	if (state()->number_of_philos == 1 || state()->number_of_meals == 0)
 		return (1);
@@ -70,7 +70,7 @@ int begin_routine(t_philo	*philo)
 	philo->last_meal = time_ms();
 	mutex_unlock(&philo->last_meal_mutex);
 	if (philo->id % 2 != 0)
-		usleep(state()->time_to_eat / 4 * 1000);
+		usleep(1000);
 	return (0);
 }
 

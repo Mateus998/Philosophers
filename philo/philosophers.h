@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:35 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/02 12:45:11 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/03 12:01:40 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@
 
 typedef struct s_thread
 {
-	pthread_t thread;
-	int created;
-} t_thread;
+	pthread_t		thread;
+	int				created;
+}					t_thread;
 
 typedef struct s_mutex
 {
-	pthread_mutex_t mutex;
-	int initiated;
-} t_mutex;
+	pthread_mutex_t	mutex;
+	int				initiated;
+}					t_mutex;
 
 typedef struct s_philo
 {
@@ -39,10 +39,10 @@ typedef struct s_philo
 	int				meals;
 	long			last_meal;
 	t_thread		thread;
-	t_mutex	*left_fork;
-	t_mutex	*right_fork;
-	t_mutex	last_meal_mutex;
-	t_mutex	meals_mutex;
+	t_mutex			*left_fork;
+	t_mutex			*right_fork;
+	t_mutex			last_meal_mutex;
+	t_mutex			meals_mutex;
 }					t_philo;
 
 typedef struct s_state
@@ -55,9 +55,9 @@ typedef struct s_state
 	long			begin_time;
 	int				status;
 	t_thread		monitor;
-	t_mutex	status_mutex;
-	t_mutex	print_mutex;
-	t_mutex	*forks;
+	t_mutex			status_mutex;
+	t_mutex			print_mutex;
+	t_mutex			*forks;
 	t_philo			*philos;
 }					t_state;
 
@@ -69,23 +69,23 @@ long				ft_atol(const char *str);
 long				time_ms(void);
 void				print_terminal(int i, char *msg);
 void				ft_clean(void);
-int				check_arg(char *a);
+int					check_arg(char *a);
 
 void				*philo_routine(void *arg);
 void				*state_routine(void *arg);
 int					philo_death(t_philo *philo);
 
-int				init_philos(void);
-int				init_state(char **av, int ac);
+int					init_philos(void);
+int					init_state(char **av, int ac);
 t_philo				*philo(int i);
 t_state				*state(void);
 
-int	create_all_threads(void);
-void safe_join(t_thread *th);
+int					create_all_threads(void);
+void				safe_join(t_thread *th);
 
-int	init_all_mutex(void);
-void safe_mutex_destroy(t_mutex *mtx);
-void mutex_unlock(t_mutex *mtx);
-void mutex_lock(t_mutex *mtx);
+int					init_all_mutex(void);
+void				safe_mutex_destroy(t_mutex *mtx);
+void				mutex_unlock(t_mutex *mtx);
+void				mutex_lock(t_mutex *mtx);
 
 #endif

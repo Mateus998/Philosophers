@@ -1,22 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mutex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/03 12:01:06 by mateferr          #+#    #+#             */
+/*   Updated: 2025/09/03 12:02:33 by mateferr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../philosophers.h"
 
-void mutex_lock(t_mutex *mtx)
+void	mutex_lock(t_mutex *mtx)
 {
-    pthread_mutex_lock(&mtx->mutex);
+	pthread_mutex_lock(&mtx->mutex);
 }
 
-void mutex_unlock(t_mutex *mtx)
+void	mutex_unlock(t_mutex *mtx)
 {
-    pthread_mutex_unlock(&mtx->mutex);
+	pthread_mutex_unlock(&mtx->mutex);
 }
 
-void safe_mutex_destroy(t_mutex *mtx)
+void	safe_mutex_destroy(t_mutex *mtx)
 {
-    if (mtx->initiated)
-        pthread_mutex_destroy(&mtx->mutex);
+	if (mtx->initiated)
+		pthread_mutex_destroy(&mtx->mutex);
 }
 
-static int safe_mutex_init(t_mutex *mtx)
+static int	safe_mutex_init(t_mutex *mtx)
 {
 	if (pthread_mutex_init(&mtx->mutex, NULL) == 0)
 		mtx->initiated = 1;
@@ -34,7 +46,7 @@ int	init_all_mutex(void)
 	{
 		if (safe_mutex_init(&philo(i)->last_meal_mutex) != 0)
 			return (ft_clean(), 1);
-		if (safe_mutex_init(&philo(i)->meals_mutex) != 0) //philo() with possible error
+		if (safe_mutex_init(&philo(i)->meals_mutex) != 0)
 			return (ft_clean(), 1);
 		if (safe_mutex_init(&state()->forks[i++]) != 0)
 			return (ft_clean(), 1);
@@ -43,5 +55,5 @@ int	init_all_mutex(void)
 		return (ft_clean(), 1);
 	if (safe_mutex_init(&state()->status_mutex) != 0)
 		return (ft_clean(), 1);
-	return(0);
+	return (0);
 }
