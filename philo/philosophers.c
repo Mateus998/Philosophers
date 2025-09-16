@@ -6,15 +6,15 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:25:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/03 12:01:36 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/16 15:35:11 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	main(int ac, char **av) // test 5 800 200 200
+int	main(int ac, char **av)
 {
-	int	i;
+	int i;
 
 	if (ac < 5 || ac > 6)
 		return (1);

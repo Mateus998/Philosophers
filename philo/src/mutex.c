@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 12:01:06 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/03 12:02:33 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/16 13:30:32 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,18 +42,18 @@ int	init_all_mutex(void)
 	int	i;
 
 	i = 0;
-	while (i < state()->number_of_philos)
+	while (i < st()->number_of_philos)
 	{
 		if (safe_mutex_init(&philo(i)->last_meal_mutex) != 0)
 			return (ft_clean(), 1);
 		if (safe_mutex_init(&philo(i)->meals_mutex) != 0)
 			return (ft_clean(), 1);
-		if (safe_mutex_init(&state()->forks[i++]) != 0)
+		if (safe_mutex_init(&st()->forks[i++]) != 0)
 			return (ft_clean(), 1);
 	}
-	if (safe_mutex_init(&state()->print_mutex) != 0)
+	if (safe_mutex_init(&st()->print_mutex) != 0)
 		return (ft_clean(), 1);
-	if (safe_mutex_init(&state()->status_mutex) != 0)
+	if (safe_mutex_init(&st()->status_mutex) != 0)
 		return (ft_clean(), 1);
 	return (0);
 }

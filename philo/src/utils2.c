@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 15:21:33 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/02 12:45:56 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/16 13:30:37 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,30 @@ void	ft_clean(void)
 	int	i;
 
 	i = 0;
-	while (i < state()->number_of_philos)
+	while (i < st()->number_of_philos)
 		safe_join(&philo(i++)->thread);
-	safe_join(&state()->monitor);
+	safe_join(&st()->monitor);
 	i = 0;
-	while (i < state()->number_of_philos)
+	while (i < st()->number_of_philos)
 	{
 		safe_mutex_destroy(&philo(i)->last_meal_mutex);
 		safe_mutex_destroy(&philo(i)->meals_mutex);
-		safe_mutex_destroy(&state()->forks[i++]);
+		safe_mutex_destroy(&st()->forks[i++]);
 	}
-	safe_mutex_destroy(&state()->print_mutex);
-	safe_mutex_destroy(&state()->status_mutex);
-	free(state()->philos);
-	free(state()->forks);
+	safe_mutex_destroy(&st()->print_mutex);
+	safe_mutex_destroy(&st()->status_mutex);
+	free(st()->philos);
+	free(st()->forks);
 }
 
 void	print_terminal(int i, char *msg)
 {
-	mutex_lock(&state()->status_mutex);
-	mutex_lock(&state()->print_mutex);
-	if (state()->status == 1)
-		printf("%ld %i %s\n", time_ms() - state()->begin_time, i, msg);
-	mutex_unlock(&state()->print_mutex);
-	mutex_unlock(&state()->status_mutex);
+	mutex_lock(&st()->status_mutex);
+	mutex_lock(&st()->print_mutex);
+	if (st()->status == 1)
+		printf("%ld %i %s\n", time_ms() - st()->begin_time, i, msg);
+	mutex_unlock(&st()->print_mutex);
+	mutex_unlock(&st()->status_mutex);
 }
 
 long	time_ms(void)

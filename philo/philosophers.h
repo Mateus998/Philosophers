@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:35 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/03 12:01:40 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/16 13:30:21 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int					philo_death(t_philo *philo);
 int					init_philos(void);
 int					init_state(char **av, int ac);
 t_philo				*philo(int i);
-t_state				*state(void);
+t_state				*st(void);
 
 int					create_all_threads(void);
 void				safe_join(t_thread *th);

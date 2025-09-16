@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 12:01:20 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/03 12:01:21 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/16 15:35:50 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static int	safe_thread_create(t_thread *th, void *(*routine)(void *),
 		th->created = 1;
 	else
 	{
-		state()->status = 0;
-		mutex_unlock(&state()->status_mutex);
+		st()->status = 0;
+		mutex_unlock(&st()->status_mutex);
 		return (1);
 	}
 	return (0);
@@ -37,21 +37,20 @@ int	create_all_threads(void)
 	int	i;
 
 	i = 0;
-	mutex_lock(&state()->status_mutex);
-	while (i < state()->number_of_philos)
+	mutex_lock(&st()->status_mutex);
+	while (i < st()->number_of_philos)
 	{
 		if (safe_thread_create(&philo(i)->thread, &philo_routine,
 				philo(i)) != 0)
 			return (1);
 		i++;
 	}
-	if (safe_thread_create(&state()->monitor, &state_routine,
-			state()->philos) != 0)
+	if (safe_thread_create(&st()->monitor, &state_routine, st()->philos) != 0)
 		return (1);
-	state()->status = 1;
-	if (state()->time_to_die == 0)
-		state()->status = 0;
-	state()->begin_time = time_ms();
-	mutex_unlock(&state()->status_mutex);
+	st()->status = 1;
+	if (st()->time_to_die == 0)
+		st()->status = 0;
+	st()->begin_time = time_ms();
+	mutex_unlock(&st()->status_mutex);
 	return (0);
 }
