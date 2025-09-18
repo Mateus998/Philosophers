@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 11:59:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/16 15:37:01 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/09/18 17:59:32 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void	*philo_routine(void *arg)
 			break ;
 		}
 		mutex_unlock(&st()->status_mutex);
+		partial_usleep((st()->time_to_die - st()->time_to_eat - st()->time_to_sleep) / 2);
 	}
 	return (NULL);
 }
