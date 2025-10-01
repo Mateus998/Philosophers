@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:25:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/16 15:35:11 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/01 11:32:47 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	main(int ac, char **av)
 {
-	int i;
+	int	i;
 
 	if (ac < 5 || ac > 6)
 		return (1);

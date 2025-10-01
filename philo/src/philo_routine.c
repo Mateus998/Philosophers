@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 11:59:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/18 17:59:32 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/01 11:42:03 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	ft_eat(t_philo *philo)
 
 int	begin_routine(t_philo *philo)
 {
-	if (st()->number_of_philos == 1 || st()->number_of_meals == 0)
+	if (st()->number_of_meals == 0)
 		return (1);
 	mutex_lock(&st()->status_mutex);
 	mutex_unlock(&st()->status_mutex);
@@ -101,7 +101,8 @@ void	*philo_routine(void *arg)
 			break ;
 		}
 		mutex_unlock(&st()->status_mutex);
-		partial_usleep((st()->time_to_die - st()->time_to_eat - st()->time_to_sleep) / 2);
+		partial_usleep((st()->time_to_die - st()->time_to_eat
+				- st()->time_to_sleep) / 2);
 	}
 	return (NULL);
 }

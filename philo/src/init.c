@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 12:01:48 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/16 15:37:56 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/01 11:33:14 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	init_philos(void)
 		st()->philos[i].last_meal = time_ms();
 		st()->philos[i].left_fork = &st()->forks[i];
 		st()->philos[i].right_fork = &st()->forks[(i + 1)
-			% st()->number_of_philos];
+		% st()->number_of_philos];
 		i++;
 	}
 	return (0);
