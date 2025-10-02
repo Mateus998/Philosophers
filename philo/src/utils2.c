@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 15:21:33 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/16 13:30:37 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/02 17:54:45 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,12 @@ int	check_arg(char *a)
 	int		j;
 	long	n;
 
-	j = 0;
 	if (!*a)
 		return (1);
-	while (a[j] && ((a[j] >= 9 && a[j] <= 13) || a[j] == ' '))
-		j++;
-	if (a[j] == '\0')
-		return (1);
-	if (a[j] == '+' || a[j] == '-')
-		j++;
+	j = 0;
 	while (a[j])
 	{
-		if (a[j] < '0' || a[j] > '9')
+		if (ft_isdigit(a[j]) == 0)
 			return (1);
 		j++;
 	}

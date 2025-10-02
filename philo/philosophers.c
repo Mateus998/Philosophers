@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:25:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/01 11:32:47 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/02 18:32:15 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ int	main(int ac, char **av)
 		return (1);
 	i = 1;
 	while (i < ac)
+	{
 		if (check_arg(av[i++]))
 			return (1);
+	}
 	if (init_state(av, ac))
 		return (1);
 	if (init_philos())

@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:35 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/02 12:58:23 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/02 18:23:44 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ typedef struct s_state
 
 void				ft_bzero(void *s, size_t n);
 void				*ft_calloc(size_t nmemb, size_t size);
-int					ft_atoi(const char *str);
+int					ft_isdigit(int c);
 long				ft_atol(const char *str);
+int					ft_atoi(const char *str);
 
 long				time_ms(void);
 void				print_terminal(int i, char *msg);

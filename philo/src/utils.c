@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:32:39 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/01 18:01:28 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/02 18:23:24 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,13 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (ptr);
 }
 
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
+
 int	ft_atoi(const char *str)
 {
 	size_t	i;
@@ -58,10 +65,16 @@ int	ft_atoi(const char *str)
 	while (str[i] && ((str[i] >= 9 && str[i] <= 13) || str[i] == ' '))
 		i++;
 	if (str[i] == '+' || str[i] == '-')
-		if (str[i++] == '-')
+	{
+		if (str[i] == '-')
 			s = -1;
-	while (str[i] && str[i] >= '0' && str[i] <= '9')
-		num = num * 10 + (str[i++] - '0');
+		i++;
+	}
+	while (ft_isdigit(str[i]))
+	{
+		num = num * 10 + (str[i] - '0');
+		i++;
+	}
 	return (num * s);
 }
 
