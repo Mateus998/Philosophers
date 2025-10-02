@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:35 by mateferr          #+#    #+#             */
-/*   Updated: 2025/09/16 13:30:21 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/02 12:58:23 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ int					check_arg(char *a);
 
 void				*philo_routine(void *arg);
 void				*state_routine(void *arg);
-int					philo_death(t_philo *philo);
 
 int					init_philos(void);
 int					init_state(char **av, int ac);
