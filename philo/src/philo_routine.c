@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 11:59:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/02 13:23:27 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/02 16:56:48 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,16 @@ static void	partial_usleep(long time)
 
 	start = time_ms();
 	while ((time_ms() - start) < time)
+	{
+		mutex_lock(&st()->status_mutex);
+		if (st()->status != 1)
+		{
+			mutex_unlock(&st()->status_mutex);
+			return ;
+		}
+		mutex_unlock(&st()->status_mutex);
 		usleep(500);
+	}
 }
 
 static int	ft_take_forks(t_philo *philo)
