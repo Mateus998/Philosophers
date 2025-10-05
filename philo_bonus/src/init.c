@@ -17,8 +17,13 @@ bool ft_init(char **av)
         return (p_error("malloc() error\n"), false);
     sem_unlink("/forks");
     sem_unlink("/print");
+    sem_unlink("/table");
     sim()->forks = sem_open("/forks", O_CREAT, 0644, sim()->n_philos);
     sim()->print = sem_open("/print", O_CREAT, 0644, 1);
+    if (sim()->n_philos % 2 == 0)
+        sim()->table = sem_open("/table", O_CREAT, 0644, sim()->n_philos / 2);
+    else
+        sim()->table = sem_open("/table", O_CREAT, 0644, sim()->n_philos / 2 + 1);
     if (sim()->forks == SEM_FAILED || sim()->print == SEM_FAILED)
         return (p_error("error opening semaphore\n"), false);
     return (true);

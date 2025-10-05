@@ -25,11 +25,12 @@ void child_exit(int i)
 {
 	if (i == 1)
 	{
-		sem_wait(ph()->print);
+		sem_wait(sim()->print);
 		printf("%ld %i %s\n", time_ms() - sim()->begin_time, ph()->id, "has died");
 	}
-	sem_close(ph()->forks);
-	sem_close(ph()->print);
+	sem_close(sim()->forks);
+	sem_close(sim()->print);
+	sem_close(sim()->table);
 	free(sim()->child_pids);
 	exit(i);
 }
@@ -38,9 +39,9 @@ void	print_terminal(int i, char *msg)
 {
 	if (time_ms() - ph()->last_meal >= sim()->t_die)
 		child_exit(1);
-	sem_wait(ph()->print);
+	sem_wait(sim()->print);
 	printf("%ld %i %s\n", time_ms() - sim()->begin_time, i, msg);
-	sem_post(ph()->print);
+	sem_post(sim()->print);
 }
 
 bool	validate_args(char **av)

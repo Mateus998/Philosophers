@@ -29,24 +29,37 @@ void	partial_usleep(int time)
 	}
 }
 
-void child_process(int i)
+void initial_check(int i)
 {
     ph()->id = i;
-    ph()->forks = sem_open("/forks", 0);
-    ph()->print = sem_open("/print", 0);
     ph()->meals = sim()->n_meals;
     ph()->last_meal = time_ms();
+    if (sim()->n_meals == 0)
+        child_exit(0);
+    if (sim()->n_philos == 1)
+    {
+        sem_wait(sim()->forks);
+        print_terminal(1, "has taken a fork");
+        partial_usleep(sim()->t_die * 2);
+    }
+}
+
+void child_process(int i)
+{
+    initial_check(i);
     while (true)
     {
-        sem_wait(ph()->forks);
+        sem_wait(sim()->table);
+        sem_wait(sim()->forks);
         print_terminal(i, "has taken a fork");
-        sem_wait(ph()->forks);
+        sem_wait(sim()->forks);
         print_terminal(i, "has taken a fork");
+        sem_post(sim()->table);
         ph()->last_meal = time_ms();
         print_terminal(i, "is eating");
         partial_usleep(sim()->t_eat);
-        sem_post(ph()->forks);
-        sem_post(ph()->forks);
+        sem_post(sim()->forks);
+        sem_post(sim()->forks);
         if (sim()->n_meals > -1 && --ph()->meals <= 0)
             break ;
         print_terminal(i, "is sleeping");
@@ -81,14 +94,14 @@ bool fork_process()
             child_process(sim()->processes + 1);
         sim()->processes++;
     }
-    i = 0;
     while (waitpid(-1, &status, 0) > 0)
     {
         status = exit_status_return(status);
         if (status != 0)
         {
-            while (i++ < sim()->processes)
-                kill(sim()->child_pids[sim()->processes--], SIGKILL);
+            i = 0;
+            while (i < sim()->n_philos)
+                kill(sim()->child_pids[i++], SIGKILL);
             while (waitpid(-1, NULL, 0) > 0);
         }
     }
@@ -99,8 +112,10 @@ void ft_clear()
 {
     sem_close(sim()->forks);
     sem_close(sim()->print);
+    sem_close(sim()->table);
     sem_unlink("/forks");
     sem_unlink("/print");
+    sem_unlink("/table");
     if (sim()->child_pids)
         free(sim()->child_pids);
 }

@@ -17,8 +17,6 @@ typedef struct s_ph
     int id;
     long last_meal;
     int meals;
-    sem_t *forks;
-    sem_t *print;
 } t_ph;
 
 typedef struct s_sim
@@ -32,6 +30,7 @@ typedef struct s_sim
     int processes;
     sem_t *forks;
     sem_t *print;
+    sem_t *table;
     pid_t *child_pids;
 } t_sim;
 
