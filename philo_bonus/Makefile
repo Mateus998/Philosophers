@@ -1,5 +1,18 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/10/06 11:39:17 by mateferr          #+#    #+#              #
+#    Updated: 2025/10/06 16:29:45 by mateferr         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = philo_bonus
-SRC = src/utils.c src/utils2.c src/init.c
+SRC = src/utils.c src/process_utils.c src/init.c src/free_exits.c \
+src/philos_process.c
 OBJ = $(SRC:.c=.o)
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
