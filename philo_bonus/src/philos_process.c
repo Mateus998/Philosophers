@@ -24,8 +24,8 @@ void	partial_usleep(int time)
 	while ((time_ms() - start) < time)
 	{
 		if (time_ms() - ph()->last_meal >= sim()->t_die)
-			child_exit(1);
-		usleep(500);
+			child_exit();
+		usleep(1000);
 	}
 }
 
@@ -60,14 +60,13 @@ void	philos_child_process(int i)
 		partial_usleep(sim()->t_eat);
 		sem_post(sim()->sem_forks);
 		sem_post(sim()->sem_forks);
-		if (sim()->n_meals > -1 && --ph()->meals <= 0)
+		if (sim()->n_meals > -1 && --ph()->meals == 0)
 			sem_post(sim()->sem_meals);
 		print_terminal(i, "is sleeping");
 		partial_usleep(sim()->t_sleep);
 		print_terminal(i, "is thinking");
 		partial_usleep((sim()->t_die - sim()->t_eat - sim()->t_sleep) / 2);
 	}
-	child_exit(0);
 }
 
 void	meals_check_child(void)
@@ -75,13 +74,16 @@ void	meals_check_child(void)
 	int	i;
 
 	i = 0;
-	sem_wait(sim()->sem_meals);
-	while (i++ < sim()->n_meals)
+	while (i++ < sim()->n_philos)
+	{
 		sem_wait(sim()->sem_meals);
+		sem_post(sim()->sem_temp);
+	}
 	sem_close(sim()->sem_forks);
 	sem_close(sim()->sem_print);
 	sem_close(sim()->sem_table);
 	sem_close(sim()->sem_meals);
+	sem_close(sim()->sem_temp);
 	free(sim()->child_pids);
 	exit(2);
 }
@@ -97,7 +99,7 @@ void	wait_processes(void)
 		if (status != 0)
 		{
 			i = 0;
-			while (i < sim()->n_philos)
+			while (i <= sim()->n_philos)
 				kill(sim()->child_pids[i++], SIGKILL);
 			while (waitpid(-1, NULL, 0) > 0);
 		}

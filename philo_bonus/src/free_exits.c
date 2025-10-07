@@ -22,20 +22,18 @@ void	p_error(char *msg)
 	write(2, msg, i);
 }
 
-void	child_exit(int i)
+void	child_exit()
 {
-	if (i == 1)
-	{
-		sem_wait(sim()->sem_print);
+	sem_wait(sim()->sem_print);
 		printf("%ld %i %s\n", time_ms() - sim()->begin_time, ph()->id,
 			"has died");
-	}
 	sem_close(sim()->sem_forks);
 	sem_close(sim()->sem_print);
 	sem_close(sim()->sem_table);
 	sem_close(sim()->sem_meals);
+	sem_close(sim()->sem_temp);
 	free(sim()->child_pids);
-	exit(i);
+	exit(1);
 }
 
 void	ft_clear(void)
@@ -48,10 +46,13 @@ void	ft_clear(void)
 	    sem_close(sim()->sem_table);
     if (sim()->sem_meals != SEM_FAILED)
 	    sem_close(sim()->sem_meals);
+	if (sim()->sem_temp != SEM_FAILED)
+	    sem_close(sim()->sem_temp);
 	sem_unlink("/forks");
 	sem_unlink("/print");
 	sem_unlink("/table");
 	sem_unlink("/meals");
+	sem_unlink("/temp");
 	if (sim()->child_pids)
 		free(sim()->child_pids);
 }

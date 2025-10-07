@@ -35,7 +35,7 @@ long	time_ms(void)
 void	print_terminal(int i, char *msg)
 {
 	if (time_ms() - ph()->last_meal >= sim()->t_die)
-		child_exit(1);
+		child_exit();
 	sem_wait(sim()->sem_print);
 	printf("%ld %i %s\n", time_ms() - sim()->begin_time, i, msg);
 	sem_post(sim()->sem_print);

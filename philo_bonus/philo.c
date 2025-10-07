@@ -24,15 +24,9 @@ int	main(int ac, char **av)
 	{
 		sim()->processes = 0;
 		while (sim()->child_pids[sim()->processes] != -1)
-		{
-			kill(sim()->child_pids[sim()->processes], SIGKILL);
-			sim()->processes++;
-		}
+			kill(sim()->child_pids[sim()->processes++], SIGKILL);
 		return (ft_clear(), 1);
 	}
 	ft_clear();
 	return (0);
 }
-/*
-erros valgrind, leak semaforos
-*/

@@ -44,6 +44,7 @@ typedef struct s_sim
 	sem_t	*sem_print;
 	sem_t	*sem_table;
 	sem_t	*sem_meals;
+	sem_t	*sem_temp;
 	pid_t	*child_pids;
 	pid_t	meals_check;
 }			t_sim;
@@ -57,7 +58,7 @@ bool		ft_init(char **av);
 
 // clear
 void		p_error(char *msg);
-void		child_exit(int i);
+void		child_exit();
 void		ft_clear(void);
 
 // utils
