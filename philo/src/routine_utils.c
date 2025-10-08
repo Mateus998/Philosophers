@@ -17,30 +17,48 @@ void	ft_clean(void)
 	int	i;
 
 	i = 0;
-	while (i < st()->number_of_philos)
+	while (i < sim()->n_philos)
 		safe_join(&philo(i++)->thread);
-	safe_join(&st()->monitor);
+	safe_join(&sim()->monitor);
 	i = 0;
-	while (i < st()->number_of_philos)
+	while (i < sim()->n_philos)
 	{
 		safe_mutex_destroy(&philo(i)->last_meal_mutex);
 		safe_mutex_destroy(&philo(i)->meals_mutex);
-		safe_mutex_destroy(&st()->forks[i++]);
+		safe_mutex_destroy(&sim()->forks[i++]);
 	}
-	safe_mutex_destroy(&st()->print_mutex);
-	safe_mutex_destroy(&st()->status_mutex);
-	free(st()->philos);
-	free(st()->forks);
+	safe_mutex_destroy(&sim()->print_mutex);
+	safe_mutex_destroy(&sim()->status_mutex);
+	free(sim()->philos);
+	free(sim()->forks);
+}
+
+void	partial_usleep(int time)
+{
+	long	start;
+
+	start = time_ms();
+	while ((time_ms() - start) < time)
+	{
+		mutex_lock(&sim()->status_mutex);
+		if (sim()->status != 1)
+		{
+			mutex_unlock(&sim()->status_mutex);
+			return ;
+		}
+		mutex_unlock(&sim()->status_mutex);
+		usleep(500);
+	}
 }
 
 void	print_terminal(int i, char *msg)
 {
-	mutex_lock(&st()->status_mutex);
-	mutex_lock(&st()->print_mutex);
-	if (st()->status == 1)
-		printf("%ld %i %s\n", time_ms() - st()->begin_time, i, msg);
-	mutex_unlock(&st()->print_mutex);
-	mutex_unlock(&st()->status_mutex);
+	mutex_lock(&sim()->status_mutex);
+	mutex_lock(&sim()->print_mutex);
+	if (sim()->status == 1)
+		printf("%ld %i %s\n", time_ms() - sim()->begin_time, i, msg);
+	mutex_unlock(&sim()->print_mutex);
+	mutex_unlock(&sim()->status_mutex);
 }
 
 long	time_ms(void)

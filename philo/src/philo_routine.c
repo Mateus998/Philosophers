@@ -12,81 +12,72 @@
 
 #include "../philosophers.h"
 
-static void	partial_usleep(long time)
+static bool sim_check(t_mutex *mtx1, t_mutex *mtx2)
 {
-	long	start;
-
-	start = time_ms();
-	while ((time_ms() - start) < time)
+	mutex_lock(&sim()->status_mutex);
+	if (sim()->status != 1)
 	{
-		mutex_lock(&st()->status_mutex);
-		if (st()->status != 1)
-		{
-			mutex_unlock(&st()->status_mutex);
-			return ;
-		}
-		mutex_unlock(&st()->status_mutex);
-		usleep(500);
+		mutex_unlock(&sim()->status_mutex);
+		if (mtx1)
+			mutex_unlock(mtx1);
+		if (mtx2)
+			mutex_unlock(mtx2);	
+		return (false);
 	}
+	mutex_unlock(&sim()->status_mutex);
+	return (true);
 }
 
-static int	ft_take_forks(t_philo *philo)
+static bool	ft_take_forks(t_philo *philo)
 {
-	int	left_id;
-	int	right_id;
-
-	left_id = philo->id;
-	right_id = philo->id % st()->number_of_philos + 1;
-	if (left_id > right_id)
+	if (philo->id > philo->id % sim()->n_philos + 1)
 	{
 		mutex_lock(philo->right_fork);
 		print_terminal(philo->id, "has taken right fork");
 		mutex_lock(philo->left_fork);
 		print_terminal(philo->id, "has taken left fork");
-		return (0);
+		return (sim_check(philo->right_fork, philo->left_fork));
 	}
 	mutex_lock(philo->left_fork);
 	print_terminal(philo->id, "has taken left fork");
-	if (st()->number_of_philos == 1)
+	if (sim()->n_philos == 1)
 	{
 		mutex_unlock(philo->left_fork);
-		return (1);
+		partial_usleep(sim()->t_die * 2);
+		return (sim_check(philo->left_fork, NULL));
 	}
 	mutex_lock(philo->right_fork);
 	print_terminal(philo->id, "has taken right fork");
-	return (0);
+	return (sim_check(philo->left_fork, philo->right_fork));
 }
 
-static int	ft_eat(t_philo *philo)
+static bool	ft_eat(t_philo *philo)
 {
 	print_terminal(philo->id, "is eating");
 	mutex_lock(&philo->last_meal_mutex);
 	philo->last_meal = time_ms();
 	mutex_unlock(&philo->last_meal_mutex);
-	partial_usleep(st()->time_to_eat);
+	partial_usleep(sim()->t_eat);
 	mutex_unlock(philo->left_fork);
 	mutex_unlock(philo->right_fork);
-	if (st()->number_of_meals != -1)
+	if (sim()->n_meals != -1)
 	{
 		mutex_lock(&philo->meals_mutex);
 		philo->meals++;
 		mutex_unlock(&philo->meals_mutex);
 	}
-	return (0);
+	return (sim_check(NULL, NULL));
 }
 
-static int	begin_routine(t_philo *philo)
+static void	begin_routine(t_philo *philo)
 {
-	if (st()->number_of_meals == 0)
-		return (1);
-	mutex_lock(&st()->status_mutex);
-	mutex_unlock(&st()->status_mutex);
+	mutex_lock(&sim()->status_mutex);
 	mutex_lock(&philo->last_meal_mutex);
 	philo->last_meal = time_ms();
 	mutex_unlock(&philo->last_meal_mutex);
+	mutex_unlock(&sim()->status_mutex);
 	if (philo->id % 2 != 0)
 		usleep(1000);
-	return (0);
 }
 
 void	*philo_routine(void *arg)
@@ -94,26 +85,20 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if (begin_routine(philo))
-		return (NULL);
-	while (1)
+	begin_routine(philo);
+	while (true)
 	{
-		if (ft_take_forks(philo))
+		if (!ft_take_forks(philo))
 			break ;
-		if (ft_eat(philo))
+		if (!ft_eat(philo))
 			break ;
 		print_terminal(philo->id, "is sleeping");
-		partial_usleep(st()->time_to_sleep);
+		partial_usleep(sim()->t_sleep);
 		print_terminal(philo->id, "is thinking");
-		mutex_lock(&st()->status_mutex);
-		if (st()->status != 1)
-		{
-			mutex_unlock(&st()->status_mutex);
+		partial_usleep((sim()->t_die - sim()->t_eat
+				- sim()->t_sleep) / 2);
+		if (!sim_check(NULL, NULL))
 			break ;
-		}
-		mutex_unlock(&st()->status_mutex);
-		partial_usleep((st()->time_to_die - st()->time_to_eat
-				- st()->time_to_sleep) / 2);
 	}
 	return (NULL);
 }

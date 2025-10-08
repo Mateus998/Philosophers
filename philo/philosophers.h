@@ -20,6 +20,7 @@
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 typedef struct s_thread
 {
@@ -45,13 +46,13 @@ typedef struct s_philo
 	t_mutex			meals_mutex;
 }					t_philo;
 
-typedef struct s_state
+typedef struct s_sim
 {
-	int				number_of_philos;
-	long			time_to_die;
-	long			time_to_eat;
-	long			time_to_sleep;
-	int				number_of_meals;
+	int				n_philos;
+	int			t_die;
+	int			t_eat;
+	int			t_sleep;
+	int				n_meals;
 	long			begin_time;
 	int				status;
 	t_thread		monitor;
@@ -59,7 +60,7 @@ typedef struct s_state
 	t_mutex			print_mutex;
 	t_mutex			*forks;
 	t_philo			*philos;
-}					t_state;
+}					t_sim;
 
 void				ft_bzero(void *s, size_t n);
 void				*ft_calloc(size_t nmemb, size_t size);
@@ -67,6 +68,7 @@ int					ft_isdigit(int c);
 long				ft_atol(const char *str);
 int					ft_atoi(const char *str);
 
+void	partial_usleep(int time);
 long				time_ms(void);
 void				print_terminal(int i, char *msg);
 void				ft_clean(void);
@@ -78,7 +80,7 @@ void				*state_routine(void *arg);
 int					init_philos(void);
 int					init_state(char **av, int ac);
 t_philo				*philo(int i);
-t_state				*st(void);
+t_sim				*sim(void);
 
 int					create_all_threads(void);
 void				safe_join(t_thread *th);

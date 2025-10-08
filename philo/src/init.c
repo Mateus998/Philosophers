@@ -14,26 +14,26 @@
 
 int	init_state(char **av, int ac)
 {
-	st()->number_of_philos = ft_atoi(av[1]);
-	if (st()->number_of_philos == 0)
+	sim()->n_philos = ft_atoi(av[1]);
+	if (sim()->n_philos == 0)
 		return (1);
-	st()->time_to_die = ft_atoi(av[2]);
-	st()->time_to_eat = ft_atoi(av[3]);
-	st()->time_to_sleep = ft_atoi(av[4]);
+	sim()->t_die = ft_atoi(av[2]);
+	sim()->t_eat = ft_atoi(av[3]);
+	sim()->t_sleep = ft_atoi(av[4]);
 	if (ac == 6)
-		st()->number_of_meals = ft_atoi(av[5]);
+		sim()->n_meals = ft_atoi(av[5]);
 	else
-		st()->number_of_meals = -1;
-	st()->status = 2;
-	st()->forks = ft_calloc(st()->number_of_philos, sizeof(t_mutex));
-	if (!st()->forks)
+		sim()->n_meals = -1;
+	sim()->status = 2;
+	sim()->forks = ft_calloc(sim()->n_philos, sizeof(t_mutex));
+	if (!sim()->forks)
 		return (1);
 	return (0);
 }
 
-t_state	*st(void)
+t_sim	*sim(void)
 {
-	static t_state	state;
+	static t_sim	state;
 
 	return (&state);
 }
@@ -42,18 +42,18 @@ int	init_philos(void)
 {
 	int	i;
 
-	st()->philos = ft_calloc(st()->number_of_philos, sizeof(t_philo));
-	if (!st()->philos)
-		return (free(st()->forks), 1);
+	sim()->philos = ft_calloc(sim()->n_philos, sizeof(t_philo));
+	if (!sim()->philos)
+		return (free(sim()->forks), 1);
 	i = 0;
-	while (i < st()->number_of_philos)
+	while (i < sim()->n_philos)
 	{
-		st()->philos[i].id = i + 1;
-		st()->philos[i].meals = 0;
-		st()->philos[i].last_meal = time_ms();
-		st()->philos[i].left_fork = &st()->forks[i];
-		st()->philos[i].right_fork = &st()->forks[(i + 1)
-		% st()->number_of_philos];
+		sim()->philos[i].id = i + 1;
+		sim()->philos[i].meals = 0;
+		sim()->philos[i].last_meal = time_ms();
+		sim()->philos[i].left_fork = &sim()->forks[i];
+		sim()->philos[i].right_fork = &sim()->forks[(i + 1)
+		% sim()->n_philos];
 		i++;
 	}
 	return (0);
@@ -61,7 +61,7 @@ int	init_philos(void)
 
 t_philo	*philo(int i)
 {
-	if (i < 0 || i >= st()->number_of_philos)
+	if (i < 0 || i >= sim()->n_philos)
 		return (NULL);
-	return (&st()->philos[i]);
+	return (&sim()->philos[i]);
 }

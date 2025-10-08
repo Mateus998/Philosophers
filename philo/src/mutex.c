@@ -42,18 +42,18 @@ int	init_all_mutex(void)
 	int	i;
 
 	i = 0;
-	while (i < st()->number_of_philos)
+	while (i < sim()->n_philos)
 	{
 		if (safe_mutex_init(&philo(i)->last_meal_mutex) != 0)
 			return (ft_clean(), 1);
 		if (safe_mutex_init(&philo(i)->meals_mutex) != 0)
 			return (ft_clean(), 1);
-		if (safe_mutex_init(&st()->forks[i++]) != 0)
+		if (safe_mutex_init(&sim()->forks[i++]) != 0)
 			return (ft_clean(), 1);
 	}
-	if (safe_mutex_init(&st()->print_mutex) != 0)
+	if (safe_mutex_init(&sim()->print_mutex) != 0)
 		return (ft_clean(), 1);
-	if (safe_mutex_init(&st()->status_mutex) != 0)
+	if (safe_mutex_init(&sim()->status_mutex) != 0)
 		return (ft_clean(), 1);
 	return (0);
 }

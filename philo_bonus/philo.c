@@ -30,4 +30,3 @@ int	main(int ac, char **av)
 	ft_clear();
 	return (0);
 }
-// comparar eficiencia com 2 threads inves de dois processos

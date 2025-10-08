@@ -1,36 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers.c                                     :+:      :+:    :+:   */
+/*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/12 11:25:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/08 19:47:18 by mateferr         ###   ########.fr       */
+/*   Created: 2025/10/06 11:39:05 by mateferr          #+#    #+#             */
+/*   Updated: 2025/10/08 19:49:08 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philo.h"
 
 int	main(int ac, char **av)
 {
-	int	i;
-
 	if (ac < 5 || ac > 6)
+		return (p_error("Invalid number of arguments\n"), 1);
+	if (validate_args(av) == false)
 		return (1);
-	i = 1;
-	while (i < ac)
+	if (ft_init(av) == false)
+		return (ft_clear(), 1);
+	if (!processes_creation())
 	{
-		if (check_arg(av[i++]))
-			return (1);
+		sim()->processes = 0;
+		while (sim()->child_pids[sim()->processes] != -1)
+			kill(sim()->child_pids[sim()->processes++], SIGKILL);
+		return (ft_clear(), 1);
 	}
-	if (init_state(av, ac))
-		return (1);
-	if (init_philos())
-		return (1);
-	if (init_all_mutex())
-		return (1);
-	create_all_threads();
-	ft_clean();
+	ft_clear();
 	return (0);
 }
+// comparar eficiencia com 2 threads inves de dois processos

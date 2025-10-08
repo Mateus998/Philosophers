@@ -5,14 +5,14 @@
 #                                                     +:+ +:+         +:+      #
 #    By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/08/12 11:17:05 by mateferr          #+#    #+#              #
-#    Updated: 2025/09/01 17:20:09 by mateferr         ###   ########.fr        #
+#    Created: 2025/10/06 11:39:17 by mateferr          #+#    #+#              #
+#    Updated: 2025/10/06 16:29:45 by mateferr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo
-SRC = src/utils.c src/routine_utils.c src/philo_routine.c src/init.c \
-src/state_routine.c src/mutex.c src/thread.c
+NAME = philo_bonus
+SRC = src/utils.c src/process_utils.c src/init.c src/free_exits.c \
+src/philos_process.c
 OBJ = $(SRC:.c=.o)
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
@@ -20,7 +20,7 @@ CFLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) philosophers.c -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) philo.c -o $(NAME)
 
 clean:
 	rm -f $(OBJ)
