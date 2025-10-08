@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 11:39:12 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/06 16:43:41 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 12:08:48 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ typedef struct s_sim
 	sem_t	*sem_print;
 	sem_t	*sem_table;
 	sem_t	*sem_meals;
-	sem_t	*sem_temp;
 	pid_t	*child_pids;
 	pid_t	meals_check;
 }			t_sim;

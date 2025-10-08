@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 15:50:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/06 16:54:06 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 12:09:29 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,16 +74,15 @@ void	meals_check_child(void)
 	int	i;
 
 	i = 0;
-	while (i++ < sim()->n_philos)
+	while (i < sim()->n_philos)
 	{
 		sem_wait(sim()->sem_meals);
-		sem_post(sim()->sem_temp);
+		i++;
 	}
 	sem_close(sim()->sem_forks);
 	sem_close(sim()->sem_print);
 	sem_close(sim()->sem_table);
 	sem_close(sim()->sem_meals);
-	sem_close(sim()->sem_temp);
 	free(sim()->child_pids);
 	exit(2);
 }

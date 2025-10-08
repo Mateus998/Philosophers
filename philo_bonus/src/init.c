@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 11:39:48 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/06 16:59:07 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 12:09:08 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static bool	init_sems(void)
 	sem_unlink("/print");
 	sem_unlink("/table");
 	sem_unlink("/meals");
-	sem_unlink("/temp");
 	if (sim()->n_philos % 2 == 0)
 		sim()->sem_table = sem_open("/table", O_CREAT, 0644, sim()->n_philos
 				/ 2);
@@ -40,15 +39,11 @@ static bool	init_sems(void)
 		sim()->sem_table = sem_open("/table", O_CREAT, 0644, sim()->n_philos / 2
 				+ 1);
 	if (sim()->n_meals > -1)
-	{
 		sim()->sem_meals = sem_open("/meals", O_CREAT, 0644, 0);
-		sim()->sem_temp = sem_open("/temp", O_CREAT, 0644, 0);
-	}
 	sim()->sem_forks = sem_open("/forks", O_CREAT, 0644, sim()->n_philos);
 	sim()->sem_print = sem_open("/print", O_CREAT, 0644, 1);
 	if (sim()->sem_forks == SEM_FAILED || sim()->sem_print == SEM_FAILED
-		|| sim()->sem_forks == SEM_FAILED || sim()->sem_print == SEM_FAILED
-		|| sim()->sem_temp == SEM_FAILED)
+		|| sim()->sem_forks == SEM_FAILED || sim()->sem_print == SEM_FAILED)
 		return (p_error("error opening semaphore\n"), false);
 	return (true);
 }

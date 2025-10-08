@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 15:53:33 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/06 16:15:44 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 12:09:22 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	child_exit()
 	sem_close(sim()->sem_print);
 	sem_close(sim()->sem_table);
 	sem_close(sim()->sem_meals);
-	sem_close(sim()->sem_temp);
 	free(sim()->child_pids);
 	exit(1);
 }
@@ -46,13 +45,10 @@ void	ft_clear(void)
 	    sem_close(sim()->sem_table);
     if (sim()->sem_meals != SEM_FAILED)
 	    sem_close(sim()->sem_meals);
-	if (sim()->sem_temp != SEM_FAILED)
-	    sem_close(sim()->sem_temp);
 	sem_unlink("/forks");
 	sem_unlink("/print");
 	sem_unlink("/table");
 	sem_unlink("/meals");
-	sem_unlink("/temp");
 	if (sim()->child_pids)
 		free(sim()->child_pids);
 }
