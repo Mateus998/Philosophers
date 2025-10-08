@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 11:39:12 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/08 12:08:48 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:11:29 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ typedef struct s_ph
 	int		meals;
 }			t_ph;
 
+typedef struct s_sem
+{
+	sem_t	*forks;
+	sem_t	*print;
+	sem_t	*table;
+	sem_t	*meals;
+	sem_t	*end;
+}			t_sem;
+
 typedef struct s_sim
 {
 	int		n_philos;
@@ -40,12 +49,8 @@ typedef struct s_sim
 	int		n_meals;
 	long	begin_time;
 	int		processes;
-	sem_t	*sem_forks;
-	sem_t	*sem_print;
-	sem_t	*sem_table;
-	sem_t	*sem_meals;
+	t_sem	*sems;
 	pid_t	*child_pids;
-	pid_t	meals_check;
 }			t_sim;
 
 bool		processes_creation(void);
@@ -57,11 +62,11 @@ bool		ft_init(char **av);
 
 // clear
 void		p_error(char *msg);
-void		child_exit();
 void		ft_clear(void);
 
 // utils
-int			exit_status_return(int status);
+void		monitoring_meals(void);
+void		monitoring_death(void);
 void		print_terminal(int i, char *msg);
 long		time_ms(void);
 bool		validate_args(char **av);

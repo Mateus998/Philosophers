@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:25:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/02 18:32:15 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:47:18 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,3 +34,4 @@ int	main(int ac, char **av)
 	ft_clean();
 	return (0);
 }
+// reorganize philos must check sim state before printing end between usleeps end get out when is 0

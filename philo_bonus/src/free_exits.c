@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 15:53:33 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/08 12:09:22 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:38:51 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,33 +22,25 @@ void	p_error(char *msg)
 	write(2, msg, i);
 }
 
-void	child_exit()
-{
-	sem_wait(sim()->sem_print);
-		printf("%ld %i %s\n", time_ms() - sim()->begin_time, ph()->id,
-			"has died");
-	sem_close(sim()->sem_forks);
-	sem_close(sim()->sem_print);
-	sem_close(sim()->sem_table);
-	sem_close(sim()->sem_meals);
-	free(sim()->child_pids);
-	exit(1);
-}
-
 void	ft_clear(void)
 {
-    if (sim()->sem_forks != SEM_FAILED)
-	    sem_close(sim()->sem_forks);
-    if (sim()->sem_print != SEM_FAILED)
-	    sem_close(sim()->sem_print);
-    if (sim()->sem_table != SEM_FAILED)
-	    sem_close(sim()->sem_table);
-    if (sim()->sem_meals != SEM_FAILED)
-	    sem_close(sim()->sem_meals);
+	if (sim()->sems->forks != SEM_FAILED)
+		sem_close(sim()->sems->forks);
+	if (sim()->sems->print != SEM_FAILED)
+		sem_close(sim()->sems->print);
+	if (sim()->sems->table != SEM_FAILED)
+		sem_close(sim()->sems->table);
+	if (sim()->sems->meals != SEM_FAILED)
+		sem_close(sim()->sems->meals);
+	if (sim()->sems->end != SEM_FAILED)
+		sem_close(sim()->sems->end);
 	sem_unlink("/forks");
 	sem_unlink("/print");
 	sem_unlink("/table");
 	sem_unlink("/meals");
+	sem_unlink("/end_sim");
 	if (sim()->child_pids)
 		free(sim()->child_pids);
+	if (sim()->sems)
+		free(sim()->sems);
 }

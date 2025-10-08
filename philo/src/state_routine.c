@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 17:20:24 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/02 13:37:40 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:42:32 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,12 @@ static int	meals_check(t_philo *philo, int *meals)
 			*meals = *meals + 1;
 		mutex_unlock(&philo->meals_mutex);
 		if (*meals >= st()->number_of_philos)
+		{
+			mutex_lock(&st()->status_mutex);
+			st()->status = 0;
+			mutex_unlock(&st()->status_mutex);
 			return (1);
+		}
 	}
 	return (0);
 }

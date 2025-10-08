@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 11:59:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/02 16:56:48 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:44:31 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,12 @@ static int	ft_eat(t_philo *philo)
 	partial_usleep(st()->time_to_eat);
 	mutex_unlock(philo->left_fork);
 	mutex_unlock(philo->right_fork);
-	if (st()->number_of_meals == -1)
-		return (0);
-	mutex_lock(&philo->meals_mutex);
-	if (++philo->meals >= st()->number_of_meals)
+	if (st()->number_of_meals != -1)
 	{
+		mutex_lock(&philo->meals_mutex);
+		philo->meals++;
 		mutex_unlock(&philo->meals_mutex);
-		return (1);
 	}
-	mutex_unlock(&philo->meals_mutex);
 	return (0);
 }
 

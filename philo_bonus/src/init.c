@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 11:39:48 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/08 12:09:08 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:39:04 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,24 @@ t_ph	*ph(void)
 
 static bool	init_sems(void)
 {
-	sem_unlink("/forks");
-	sem_unlink("/print");
-	sem_unlink("/table");
-	sem_unlink("/meals");
+	sem_t	*sem;
+
+	sem = sem_open("/print", O_CREAT, 0644, 1);
+	sim()->sems->print = sem;
+	sem = sem_open("/forks", O_CREAT, 0644, sim()->n_philos);
+	sim()->sems->forks = sem;
 	if (sim()->n_philos % 2 == 0)
-		sim()->sem_table = sem_open("/table", O_CREAT, 0644, sim()->n_philos
-				/ 2);
+		sem = sem_open("/table", O_CREAT, 0644, sim()->n_philos / 2);
 	else
-		sim()->sem_table = sem_open("/table", O_CREAT, 0644, sim()->n_philos / 2
-				+ 1);
-	if (sim()->n_meals > -1)
-		sim()->sem_meals = sem_open("/meals", O_CREAT, 0644, 0);
-	sim()->sem_forks = sem_open("/forks", O_CREAT, 0644, sim()->n_philos);
-	sim()->sem_print = sem_open("/print", O_CREAT, 0644, 1);
-	if (sim()->sem_forks == SEM_FAILED || sim()->sem_print == SEM_FAILED
-		|| sim()->sem_forks == SEM_FAILED || sim()->sem_print == SEM_FAILED)
+		sem = sem_open("/table", O_CREAT, 0644, sim()->n_philos / 2 + 1);
+	sim()->sems->table = sem;
+	sem = sem_open("/meals", O_CREAT, 0644, 0);
+	sim()->sems->meals = sem;
+	sem = sem_open("/end_sim", O_CREAT, 0644, 0);
+	sim()->sems->end = sem;
+	if (sim()->sems->forks == SEM_FAILED || sim()->sems->print == SEM_FAILED
+		|| sim()->sems->forks == SEM_FAILED || sim()->sems->print == SEM_FAILED
+		|| sim()->sems->end == SEM_FAILED)
 		return (p_error("error opening semaphore\n"), false);
 	return (true);
 }
@@ -60,9 +62,17 @@ bool	ft_init(char **av)
 		sim()->n_meals = -1;
 	sim()->begin_time = time_ms();
 	sim()->processes = 0;
-	sim()->child_pids = ft_calloc(sim()->n_philos + 1, sizeof(pid_t));
+	sim()->child_pids = ft_calloc(sim()->n_philos + 2, sizeof(pid_t));
 	if (!sim()->child_pids)
 		return (p_error("malloc() error\n"), false);
+	sim()->sems = ft_calloc(1, sizeof(t_sem));
+	if (!sim()->sems)
+		return (p_error("malloc() error\n"), false);
+	sem_unlink("/forks");
+	sem_unlink("/print");
+	sem_unlink("/table");
+	sem_unlink("/meals");
+	sem_unlink("/end_sim");
 	if (!init_sems())
 		return (false);
 	return (true);

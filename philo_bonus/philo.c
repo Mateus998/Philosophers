@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 11:39:05 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/06 16:48:18 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:49:08 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,3 +30,4 @@ int	main(int ac, char **av)
 	ft_clear();
 	return (0);
 }
+// comparar eficiencia com 2 threads inves de dois processos
