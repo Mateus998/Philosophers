@@ -6,13 +6,13 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 11:59:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/08 19:44:31 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/09 11:03:38 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philosophers.h"
 
-static bool sim_check(t_mutex *mtx1, t_mutex *mtx2)
+static bool	sim_check(t_mutex *mtx1, t_mutex *mtx2)
 {
 	mutex_lock(&sim()->status_mutex);
 	if (sim()->status != 1)
@@ -21,7 +21,7 @@ static bool sim_check(t_mutex *mtx1, t_mutex *mtx2)
 		if (mtx1)
 			mutex_unlock(mtx1);
 		if (mtx2)
-			mutex_unlock(mtx2);	
+			mutex_unlock(mtx2);
 		return (false);
 	}
 	mutex_unlock(&sim()->status_mutex);
@@ -95,8 +95,7 @@ void	*philo_routine(void *arg)
 		print_terminal(philo->id, "is sleeping");
 		partial_usleep(sim()->t_sleep);
 		print_terminal(philo->id, "is thinking");
-		partial_usleep((sim()->t_die - sim()->t_eat
-				- sim()->t_sleep) / 2);
+		partial_usleep((sim()->t_die - sim()->t_eat - sim()->t_sleep) / 2);
 		if (!sim_check(NULL, NULL))
 			break ;
 	}

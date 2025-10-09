@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 15:50:32 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/08 19:39:14 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/09 11:25:05 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,12 @@ void	philos_process(int i)
 		print_terminal(i, "has taken a fork");
 		sem_wait(sim()->sems->forks);
 		print_terminal(i, "has taken a fork");
-		sem_post(sim()->sems->table);
-		ph()->last_meal = time_ms();
 		print_terminal(i, "is eating");
 		partial_usleep(sim()->t_eat);
+		ph()->last_meal = time_ms();
 		sem_post(sim()->sems->forks);
 		sem_post(sim()->sems->forks);
+		sem_post(sim()->sems->table);
 		if (ph()->meals > 0 && --ph()->meals == 0)
 			sem_post(sim()->sems->meals);
 		print_terminal(i, "is sleeping");

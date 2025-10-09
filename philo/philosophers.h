@@ -6,7 +6,7 @@
 /*   By: mateferr <mateferr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:35 by mateferr          #+#    #+#             */
-/*   Updated: 2025/10/02 18:23:44 by mateferr         ###   ########.fr       */
+/*   Updated: 2025/10/09 11:03:28 by mateferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 # include <limits.h>
 # include <pthread.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
-# include <stdbool.h>
 
 typedef struct s_thread
 {
@@ -49,9 +49,9 @@ typedef struct s_philo
 typedef struct s_sim
 {
 	int				n_philos;
-	int			t_die;
-	int			t_eat;
-	int			t_sleep;
+	int				t_die;
+	int				t_eat;
+	int				t_sleep;
 	int				n_meals;
 	long			begin_time;
 	int				status;
@@ -68,7 +68,7 @@ int					ft_isdigit(int c);
 long				ft_atol(const char *str);
 int					ft_atoi(const char *str);
 
-void	partial_usleep(int time);
+void				partial_usleep(int time);
 long				time_ms(void);
 void				print_terminal(int i, char *msg);
 void				ft_clean(void);
